@@ -18,17 +18,17 @@ public enum ErrorStatus implements BaseErrorCode {
 
 
     // 멤버 관려 에러
-    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "사용자가 없습니다."),
-    USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 등록된 사용자입니다."),
+    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "User not found."),
+    USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4001", "User already exist."),
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
-    WRONG_LOGIN_INFO(HttpStatus.UNAUTHORIZED, "MEMBER4003", "아이디 또는 비밀번호가 잘못되었습니다"),
-    USER_IS_LOCKED(HttpStatus.UNAUTHORIZED, "MEMBER4004", "계정이 잠겼습니다."),
-    USER_IS_DISABLED(HttpStatus.UNAUTHORIZED, "MEMBER4005", "계정이 비활성화되었습니다."),
-    USER_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "MEMBER4006", "계정이 만료되었습니다."),
-    CREDENTIAL_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "MEMBER4007", "자격 증명이 만료되었습니다."),
-    AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "MEMBER4008", "인증에 실패하였습니다."),
-    USER_TOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "MEMBER4009", "토큰이 만료되었습니다."),
-    USER_TOKEN_IS_NOT_VALID(HttpStatus.UNAUTHORIZED, "MEMBER4010", "토큰이 유효하지 않습니다."),
+    WRONG_LOGIN_INFO(HttpStatus.UNAUTHORIZED, "MEMBER4003", "UserId or Password is not correct."),
+    USER_IS_LOCKED(HttpStatus.UNAUTHORIZED, "MEMBER4004", "User account is locked."),
+    USER_IS_DISABLED(HttpStatus.UNAUTHORIZED, "MEMBER4005", "User account is disabled."),
+    USER_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "MEMBER4006", "User account is expired."),
+    CREDENTIAL_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "MEMBER4007", "Credential is expired."),
+    AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "MEMBER4008", "Authentication failed."),
+    USER_TOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "MEMBER4009", "JWT Token is expired."),
+    USER_TOKEN_IS_NOT_VALID(HttpStatus.UNAUTHORIZED, "MEMBER4010", "JWT Token is not valid."),
 
 
     // 예시,,,
