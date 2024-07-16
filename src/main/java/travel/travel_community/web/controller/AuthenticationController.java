@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import travel.travel_community.apiPayload.ApiResponse;
+import travel.travel_community.apiPayload.code.status.ErrorStatus;
+import travel.travel_community.apiPayload.exception.handler.UserHandler;
 import travel.travel_community.converter.UserConverter;
 import travel.travel_community.domain.User;
 import travel.travel_community.service.AuthenticationService;
@@ -35,6 +37,10 @@ public class AuthenticationController {
     public ApiResponse<UserResponseDTO.UserInfoResultDTO> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
         // "Bearer " 접두사 제거
         //System.out.println("authHeader = " + authHeader);
+        if(authHeader == null || authHeader.length() <= 7){
+            throw new UserHandler(ErrorStatus.USER_TOKEN_IS_NOT_VALID);
+        }
+
         String token = authHeader.substring(7);
         //System.out.println("token = " + token);
         User user = authenticationService.getUserFromToken(token);

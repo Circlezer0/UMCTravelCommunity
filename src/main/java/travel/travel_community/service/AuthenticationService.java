@@ -47,6 +47,10 @@ public class AuthenticationService{
 //        System.out.println("request.getUserid() = " + request.getUserid());
 //        System.out.println("request.getPassword() = " + request.getPassword());
 
+        // 사용자가 DB에 존재하는지 확인
+        User user = userRepository.findUserByUserid(request.getUserid())
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
         // 인증 시도. 인증에 실패하면 AuthenticationError 반환됨
         try {
             authenticationManager.authenticate(
@@ -71,9 +75,7 @@ public class AuthenticationService{
             throw new UserHandler(ErrorStatus._BAD_REQUEST);
         }
 
-
         // 인증 성공 시
-        User user = userRepository.findUserByUserid(request.getUserid()).orElseThrow();
         return jwtService.generateToken(user);
     }
 
