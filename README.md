@@ -1,2 +1,0 @@
-# UMCTravelCommunity
-travel community
