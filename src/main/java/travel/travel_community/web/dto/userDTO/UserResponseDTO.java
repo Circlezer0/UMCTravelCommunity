@@ -1,5 +1,6 @@
 package travel.travel_community.web.dto.userDTO;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,6 +48,23 @@ public class UserResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class EmailValidationResultDTO {
-        private String emailAddress;
+        private String email;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FindUserIdResultDTO {
+        private String email;
+        private String userid;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ResetPasswordResultDTO {
+        private String userid;
     }
 }

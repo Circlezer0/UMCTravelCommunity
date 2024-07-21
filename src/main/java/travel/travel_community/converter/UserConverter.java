@@ -35,7 +35,20 @@ public class UserConverter {
 
     public static UserResponseDTO.EmailValidationResultDTO toEmailValidationResultDTO(UserRequestDTO.EmailValidationDTO request){
         return UserResponseDTO.EmailValidationResultDTO.builder()
-                .emailAddress(request.getEmailAddress())
+                .email(request.getEmail())
+                .build();
+    }
+
+    public static UserResponseDTO.FindUserIdResultDTO toFindUserIdResultDTO(User user) {
+        return UserResponseDTO.FindUserIdResultDTO.builder()
+                .userid(user.getUserid())
+                .email(user.getEmail())
+                .build();
+    }
+
+    public static UserResponseDTO.ResetPasswordResultDTO toResetPasswordResultDTO(User user){
+        return UserResponseDTO.ResetPasswordResultDTO.builder()
+                .userid(user.getUserid())
                 .build();
     }
 }
