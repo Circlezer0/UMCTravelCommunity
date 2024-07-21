@@ -24,11 +24,14 @@ public class AuthenticationService{
     private final AuthenticationManager authenticationManager;
     public String signup(UserRequestDTO.SignupDTO request) {
         User prevUser = userRepository.findUserByUserid(request.getUserid()).orElseGet(() -> null);
-        System.out.println("AuthenticationService.register");
-        System.out.println("prevUser = " + prevUser);
         if (prevUser != null) {
             throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
         }
+        prevUser = userRepository.findUserByEmail(request.getEmail()).orElseGet(() -> null);
+        if (prevUser != null) {
+            throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
+        }
+
         // 회원가입을 위해 유저를 db에 등록
         User user = User.builder()
                 .userid(request.getUserid())
