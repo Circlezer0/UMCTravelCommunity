@@ -33,4 +33,20 @@ public class UserResponseDTO {
         private String email;
         private String role;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EmailAuthenticationResultDTO {
+        private String authNum;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EmailValidationResultDTO {
+        private String emailAddress;
+    }
 }

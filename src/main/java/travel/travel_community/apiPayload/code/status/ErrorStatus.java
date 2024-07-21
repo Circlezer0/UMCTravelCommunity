@@ -30,6 +30,12 @@ public enum ErrorStatus implements BaseErrorCode {
     USER_TOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "MEMBER4009", "JWT Token is expired."),
     USER_TOKEN_IS_NOT_VALID(HttpStatus.UNAUTHORIZED, "MEMBER4010", "JWT Token is not valid."),
 
+    // 메일 전송 관련 에러
+    MAIL_SEND_ERROR(HttpStatus.BAD_REQUEST, "MAIL4001", "Failed to send mail."),
+    MAIL_AUTHENTICATION_ERROR(HttpStatus.UNAUTHORIZED, "MAIL4002", "Email authentication failed."),
+    MAIL_AUTHENTICATION_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "MAIL4003", "Not valid authentication numbers."),
+    MAIL_AUTHENTICATION_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "MAIL4004", "Authentication number not found."),
+    MAIL_AUTHENTICATION_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "MAIL4005", "Authentication number is expired."),
 
     // 예시,,,
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),

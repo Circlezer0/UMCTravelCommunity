@@ -1,6 +1,7 @@
 package travel.travel_community.converter;
 
 import travel.travel_community.domain.User;
+import travel.travel_community.web.dto.userDTO.UserRequestDTO;
 import travel.travel_community.web.dto.userDTO.UserResponseDTO;
 
 public class UserConverter {
@@ -23,6 +24,18 @@ public class UserConverter {
                 .nickname(user.getNickname())
                 .email(user.getEmail())
                 .role(user.getRole().name())
+                .build();
+    }
+
+    public static UserResponseDTO.EmailAuthenticationResultDTO toEmailAuthenticationResultDTO(String authNum){
+        return UserResponseDTO.EmailAuthenticationResultDTO.builder()
+                .authNum(authNum)
+                .build();
+    }
+
+    public static UserResponseDTO.EmailValidationResultDTO toEmailValidationResultDTO(UserRequestDTO.EmailValidationDTO request){
+        return UserResponseDTO.EmailValidationResultDTO.builder()
+                .emailAddress(request.getEmailAddress())
                 .build();
     }
 }
