@@ -9,10 +9,12 @@ import travel.travel_community.entity.User;
 import travel.travel_community.entity.baseEntity.AbstractPost;
 import travel.travel_community.entity.baseEntity.TimeEntity;
 import travel.travel_community.entity.mapping.TravelItemLikedPost;
+import travel.travel_community.entity.mapping.TravelItemPostCategory;
 import travel.travel_community.entity.posts.categories.TravelItemCategory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "travel_item_posts")
@@ -21,13 +23,8 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class TravelItemPost extends AbstractPost {
-    @ManyToMany
-    @JoinTable(
-            name = "travel_item_post_categories",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private List<TravelItemCategory> categories = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TravelItemPostCategory> postCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "travelItemPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TravelItemComment> comments = new ArrayList<>();
@@ -48,5 +45,22 @@ public class TravelItemPost extends AbstractPost {
     public void removeLike(User user) {
         this.likes.removeIf(likedPost -> likedPost.getUser().equals(user));
         this.setLikeCount(this.likes.size());
+    }
+
+    public void addCategory(TravelItemCategory category) {
+        TravelItemPostCategory postCategory = new TravelItemPostCategory();
+        postCategory.setPost(this);
+        postCategory.setCategory(category);
+        this.postCategories.add(postCategory);
+    }
+
+    public void removeCategory(TravelItemCategory category) {
+        this.postCategories.removeIf(pc -> pc.getCategory().equals(category));
+    }
+
+    public List<TravelItemCategory> getCategories() {
+        return this.postCategories.stream()
+                .map(TravelItemPostCategory::getCategory)
+                .collect(Collectors.toList());
     }
 }
