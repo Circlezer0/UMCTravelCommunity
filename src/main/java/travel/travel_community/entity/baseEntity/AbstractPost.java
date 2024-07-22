@@ -31,6 +31,13 @@ public abstract class AbstractPost extends TimeEntity {
     @Column
     private int likeCount = 0;
 
+    @Column
+    private int viewCount = 0;
+
     public abstract void addLike(User user);
     public abstract void removeLike(User user);
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
 }
