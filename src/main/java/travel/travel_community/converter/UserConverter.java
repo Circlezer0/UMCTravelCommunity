@@ -4,7 +4,18 @@ import travel.travel_community.entity.User;
 import travel.travel_community.web.dto.userDTO.UserRequestDTO;
 import travel.travel_community.web.dto.userDTO.UserResponseDTO;
 
+import java.util.List;
+
 public class UserConverter {
+
+    public static UserResponseDTO.UserDTO toUserDTO(User user) {
+        return UserResponseDTO.UserDTO.builder()
+                .id(user.getId())
+                .userid(user.getUserid())
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .build();
+    }
 
     public static UserResponseDTO.SignupResultDTO toSignupResultDTO(String jwtToken){
         return UserResponseDTO.SignupResultDTO.builder()
@@ -49,6 +60,12 @@ public class UserConverter {
     public static UserResponseDTO.ResetPasswordResultDTO toResetPasswordResultDTO(User user){
         return UserResponseDTO.ResetPasswordResultDTO.builder()
                 .userid(user.getUserid())
+                .build();
+    }
+
+    public static UserResponseDTO.TopUsersResultDTO toTopUserResultDTO(List<User> users) {
+        return UserResponseDTO.TopUsersResultDTO.builder()
+                .topUsers(users)
                 .build();
     }
 }
