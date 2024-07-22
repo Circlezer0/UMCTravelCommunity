@@ -1,4 +1,4 @@
-package travel.travel_community.domain;
+package travel.travel_community.entity;
 
 
 import jakarta.persistence.*;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import travel.travel_community.domain.enums.Role;
+import travel.travel_community.entity.enums.Role;
 
 import java.util.Collection;
 import java.util.List;

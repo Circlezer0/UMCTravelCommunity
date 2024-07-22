@@ -1,7 +1,7 @@
 package travel.travel_community.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import travel.travel_community.domain.User;
+import travel.travel_community.entity.User;
 
 import java.util.Optional;
 

@@ -7,7 +7,6 @@ import travel.travel_community.apiPayload.ApiResponse;
 import travel.travel_community.apiPayload.code.status.ErrorStatus;
 import travel.travel_community.apiPayload.exception.handler.UserHandler;
 import travel.travel_community.converter.UserConverter;
-import travel.travel_community.domain.User;
 import travel.travel_community.service.AuthenticationService;
 import travel.travel_community.service.MailSendService;
 import travel.travel_community.service.UserService;

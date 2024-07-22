@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import travel.travel_community.apiPayload.code.status.ErrorStatus;
 import travel.travel_community.apiPayload.exception.handler.UserHandler;
-import travel.travel_community.domain.User;
+import travel.travel_community.entity.User;
 import travel.travel_community.repository.UserRepository;
 
 import java.util.Optional;
