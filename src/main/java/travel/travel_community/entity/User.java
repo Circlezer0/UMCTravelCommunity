@@ -2,36 +2,43 @@ package travel.travel_community.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import travel.travel_community.entity.baseEntity.TimeEntity;
 import travel.travel_community.entity.enums.Role;
+import travel.travel_community.entity.mapping.LikedPost;
+import travel.travel_community.entity.mapping.TravelItemLikedPost;
+import travel.travel_community.entity.posts.Comment;
+import travel.travel_community.entity.posts.TravelItemComment;
+import travel.travel_community.entity.posts.TravelItemPost;
+import travel.travel_community.entity.posts.TravelPost;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class User implements UserDetails {
+public class User extends TimeEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String userid;
 
-    @Column
+    @Column(unique = true)
     private String nickname;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
     @Column
@@ -44,6 +51,64 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @OneToMany(mappedBy = "author")
+    private List<TravelPost> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<LikedPost> likedPosts = new ArrayList<>();
+
+    // 좋아요한 게시글 찾기
+    public List<TravelPost> getLikedPosts() {
+        return likedPosts.stream()
+                .map(LikedPost::getPost)
+                .collect(Collectors.toList());
+    }
+
+    // 작성한 게시글 찾기
+    public List<TravelPost> getAuthoredPosts() {
+        return posts;
+    }
+
+    // 댓글 단 게시글 찾기
+    public List<TravelPost> getCommentedPosts() {
+        return comments.stream()
+                .map(Comment::getTravelPost)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+
+
+    @OneToMany(mappedBy = "author")
+    private List<TravelItemPost> travelItemPosts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author")
+    private List<TravelItemComment> travelItemComments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<TravelItemLikedPost> likedTravelItemPosts = new ArrayList<>();
+
+    // 여행 물품 게시글 관련 메서드
+    public List<TravelItemPost> getLikedTravelItemPosts() {
+        return likedTravelItemPosts.stream()
+                .map(TravelItemLikedPost::getPost)
+                .collect(Collectors.toList());
+    }
+
+    public List<TravelItemPost> getAuthoredTravelItemPosts() {
+        return travelItemPosts;
+    }
+
+    public List<TravelItemPost> getCommentedTravelItemPosts() {
+        return travelItemComments.stream()
+                .map(TravelItemComment::getTravelItemPost)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
 

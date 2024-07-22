@@ -1,7 +1,6 @@
 package travel.travel_community.converter;
 
 import travel.travel_community.entity.User;
-import travel.travel_community.web.dto.userDTO.UserRequestDTO;
 import travel.travel_community.web.dto.userDTO.UserResponseDTO;
 
 public class UserConverter {
