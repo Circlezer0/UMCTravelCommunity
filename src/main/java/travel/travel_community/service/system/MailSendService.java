@@ -1,4 +1,4 @@
-package travel.travel_community.service;
+package travel.travel_community.service.system;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package travel.travel_community.service;
+package travel.travel_community.service.system;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

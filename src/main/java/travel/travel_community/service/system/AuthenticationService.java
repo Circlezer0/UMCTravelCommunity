@@ -1,4 +1,4 @@
-package travel.travel_community.service;
+package travel.travel_community.service.system;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.*;

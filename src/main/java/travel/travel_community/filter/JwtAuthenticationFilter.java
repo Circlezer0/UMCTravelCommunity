@@ -21,7 +21,7 @@ import travel.travel_community.apiPayload.ApiResponse;
 import travel.travel_community.apiPayload.code.ErrorReasonDTO;
 import travel.travel_community.apiPayload.code.status.ErrorStatus;
 import travel.travel_community.apiPayload.exception.handler.UserHandler;
-import travel.travel_community.service.JwtService;
+import travel.travel_community.service.system.JwtService;
 
 
 import java.io.IOException;
