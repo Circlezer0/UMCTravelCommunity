@@ -5,10 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import travel.travel_community.apiPayload.ApiResponse;
-import travel.travel_community.converter.PostConverter;
+import travel.travel_community.converter.postConverter.PostConverter;
 import travel.travel_community.entity.posts.TravelItemPost;
 import travel.travel_community.service.*;
-import travel.travel_community.service.system.ServerLogService;
 import travel.travel_community.web.dto.postDTO.PostResponseDTO;
 
 import java.util.List;

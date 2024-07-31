@@ -5,22 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import travel.travel_community.apiPayload.ApiResponse;
-import travel.travel_community.converter.PostConverter;
-import travel.travel_community.converter.RegionConverter;
 import travel.travel_community.converter.ServerLogConverter;
-import travel.travel_community.converter.UserConverter;
-import travel.travel_community.entity.User;
-import travel.travel_community.entity.posts.TravelItemPost;
-import travel.travel_community.entity.posts.TravelPost;
-import travel.travel_community.entity.posts.regions.Country;
 import travel.travel_community.service.*;
 import travel.travel_community.service.system.ServerLogService;
-import travel.travel_community.web.dto.postDTO.PostResponseDTO;
-import travel.travel_community.web.dto.regionDTO.RegionResponseDTO;
 import travel.travel_community.web.dto.serverLogDTO.ServerLogResponseDTO;
-import travel.travel_community.web.dto.userDTO.UserResponseDTO;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/main")
@@ -33,14 +21,6 @@ public class MainPageController {
     private final TravelItemPostCategoryService travelItemPostCategoryService;
 
     private final ServerLogService serverLogService;
-
-
-
-
-
-
-
-
 
 
     @GetMapping("/serverLogs")

@@ -1,10 +1,9 @@
-package travel.travel_community.converter;
+package travel.travel_community.converter.postConverter;
 
-import travel.travel_community.entity.User;
+import travel.travel_community.converter.UserConverter;
 import travel.travel_community.entity.posts.TravelItemPost;
 import travel.travel_community.entity.posts.TravelPost;
 import travel.travel_community.web.dto.postDTO.PostResponseDTO;
-import travel.travel_community.web.dto.userDTO.UserResponseDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +16,7 @@ public class PostConverter {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .likeCount(post.getLikeCount())
+                .viewCount(post.getViewCount())
                 .createDate(post.getCreatedDate())
                 .user(UserConverter.toUserDTO(post.getAuthor()))
                 .build();
@@ -28,6 +28,7 @@ public class PostConverter {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .likeCount(post.getLikeCount())
+                .viewCount(post.getViewCount())
                 .createDate(post.getCreatedDate())
                 .user(UserConverter.toUserDTO(post.getAuthor()))
                 .build();

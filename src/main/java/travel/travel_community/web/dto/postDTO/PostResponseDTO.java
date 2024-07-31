@@ -21,6 +21,7 @@ public class PostResponseDTO {
         String title;
         String content;
         int likeCount;
+        int viewCount;
         LocalDateTime createDate;
         UserResponseDTO.UserDTO user;
     }
@@ -35,6 +36,7 @@ public class PostResponseDTO {
         String title;
         String content;
         int likeCount;
+        int viewCount;
         LocalDateTime createDate;
         UserResponseDTO.UserDTO user;
     }

@@ -37,6 +37,11 @@ public enum ErrorStatus implements BaseErrorCode {
     MAIL_AUTHENTICATION_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "MAIL4004", "Authentication number not found."),
     MAIL_AUTHENTICATION_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "MAIL4005", "Authentication number is expired."),
 
+    // 게시글 관련 에러
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST4001", "Post not found."),
+    PAGE_OUT_OF_BOUNDS(HttpStatus.BAD_REQUEST, "POST4002", "Page number out of bounds."),
+    ORDER_BY_VALUE_ERROR(HttpStatus.BAD_REQUEST, "POST4003", "Order keyword not found."),
+
     // 예시,,,
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),
 

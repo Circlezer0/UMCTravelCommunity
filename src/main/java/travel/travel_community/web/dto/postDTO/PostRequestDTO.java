@@ -2,7 +2,7 @@ package travel.travel_community.web.dto.postDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
+import lombok.*;
 
 public class PostRequestDTO {
 
@@ -20,7 +20,14 @@ public class PostRequestDTO {
     }
 
     @Getter
-    public static class TravelPostDto {
-
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ViewAllDTO{
+        @Builder.Default
+        private String orderBy = "latest";
+        @Builder.Default
+        private int page = 1;
     }
 }

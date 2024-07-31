@@ -1,17 +1,21 @@
 package travel.travel_community.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 import travel.travel_community.apiPayload.ApiResponse;
-import travel.travel_community.converter.PostConverter;
+import travel.travel_community.apiPayload.code.status.ErrorStatus;
+import travel.travel_community.apiPayload.exception.handler.PostHandler;
+import travel.travel_community.converter.postConverter.PostConverter;
 import travel.travel_community.converter.RegionConverter;
+import travel.travel_community.converter.postConverter.TravelPostConverter;
 import travel.travel_community.entity.posts.TravelPost;
 import travel.travel_community.entity.posts.regions.Country;
 import travel.travel_community.service.*;
 import travel.travel_community.service.system.ServerLogService;
+import travel.travel_community.web.dto.postDTO.PostRequestDTO;
 import travel.travel_community.web.dto.postDTO.PostResponseDTO;
+import travel.travel_community.web.dto.postDTO.travelPostDTO.TravelPostResponseDTO;
 import travel.travel_community.web.dto.regionDTO.RegionResponseDTO;
 
 import java.util.List;
@@ -53,6 +57,41 @@ public class TravelPostController {
 
 
     //------------------------- 게시글 조회 ---------------------------------
+    @GetMapping("/allPosts")
+    public ApiResponse<TravelPostResponseDTO.ViewAllResultDTO> getAllPosts(@ModelAttribute PostRequestDTO.ViewAllDTO request) {
+        String orderBy = request.getOrderBy();
+        int page = request.getPage() - 1;
 
+        if(page < 0){
+            throw new PostHandler(ErrorStatus.PAGE_OUT_OF_BOUNDS);
+        }
+
+        // 정렬 키워드 분석
+        Page<TravelPost> posts = switch (orderBy) {
+            case "latest" -> travelPostService.getLatestPosts(page);
+            case "oldest" -> travelPostService.getOldestPosts(page);
+            case "views" -> travelPostService.getMostViewedPosts(page);
+            case "likes" -> travelPostService.getMostLikedPosts(page);
+            case "name" -> travelPostService.getPostsByTitleAsc(page);
+            // 에러 발생 코드
+            default -> throw new PostHandler(ErrorStatus.ORDER_BY_VALUE_ERROR);
+        };
+
+        if (posts == null) {
+            throw new PostHandler(ErrorStatus.POST_NOT_FOUND);
+        }
+        if (posts.getTotalPages() <= page) {
+            throw new PostHandler(ErrorStatus.PAGE_OUT_OF_BOUNDS);
+        }
+
+        int minPageIdx = Math.max(0, (page / 5) * 5) + 1;
+        int maxPageIdx = Math.min(posts.getTotalPages(), (1 + page / 5) * 5);
+
+        return ApiResponse.onSuccess(
+                TravelPostConverter.toViewAllResultDTO(
+                        posts, page + 1, orderBy, minPageIdx, maxPageIdx
+                )
+        );
+    }
     //---------------------------------------------------------------------
 }
