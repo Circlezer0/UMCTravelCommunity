@@ -47,7 +47,7 @@ public class PostResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetTopTravelPostsResultDTO {
+    public static class TravelPostsResultDTO {
         // 메인화면에서 7일간 여행가방 게시글 목록 DTO
         private List<TravelPostDTO> topTravelPosts;
     }
@@ -56,7 +56,7 @@ public class PostResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetTopTravelItemResultPosts {
+    public static class TravelItemPostsResultDTO {
         // 메인화면에서 7일간 여행가방 게시글 목록 DTO
         private List<TravelItemPostDTO> topTravelItemPosts;
     }

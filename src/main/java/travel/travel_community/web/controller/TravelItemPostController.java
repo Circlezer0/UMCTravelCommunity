@@ -26,9 +26,9 @@ public class TravelItemPostController {
      * @return 여행가방 게시글 리스트 (30개)
      */
     @GetMapping("/topTravelItemPosts")
-    public ApiResponse<PostResponseDTO.GetTopTravelItemResultPosts> getTopTravelItemPosts() {
+    public ApiResponse<PostResponseDTO.TravelItemPostsResultDTO> getTopTravelItemPosts() {
         List<TravelItemPost> posts = travelItemPostService.getTopTravelItemPosts();
-        return ApiResponse.onSuccess(PostConverter.toTopTravelItemPostsResultDTO(posts));
+        return ApiResponse.onSuccess(PostConverter.toTravelItemPostsResultDTO(posts));
     }
     //---------------------------------------------------------------------
 

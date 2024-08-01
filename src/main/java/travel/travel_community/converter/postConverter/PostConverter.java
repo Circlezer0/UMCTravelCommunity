@@ -36,22 +36,22 @@ public class PostConverter {
                 .build();
     }
 
-    public static PostResponseDTO.GetTopTravelPostsResultDTO toTopTravelPostsResultDTO(List<TravelPost> posts){
+    public static PostResponseDTO.TravelPostsResultDTO toTravelPostsResultDTO(List<TravelPost> posts){
         // 무한재귀 방지를 위한 조치
         List<PostResponseDTO.TravelPostDTO> collect = posts.stream()
                 .map(PostConverter::toTravelPostResultDTO)
                 .collect(Collectors.toList());
 
-        return PostResponseDTO.GetTopTravelPostsResultDTO.builder()
+        return PostResponseDTO.TravelPostsResultDTO.builder()
                 .topTravelPosts(collect)
                 .build();
     }
 
-    public static PostResponseDTO.GetTopTravelItemResultPosts toTopTravelItemPostsResultDTO(List<TravelItemPost> posts){
+    public static PostResponseDTO.TravelItemPostsResultDTO toTravelItemPostsResultDTO(List<TravelItemPost> posts){
         List<PostResponseDTO.TravelItemPostDTO> collect = posts.stream()
                 .map(PostConverter::toTravelItemPostResultDTO)
                 .collect(Collectors.toList());
-        return PostResponseDTO.GetTopTravelItemResultPosts.builder()
+        return PostResponseDTO.TravelItemPostsResultDTO.builder()
                 .topTravelItemPosts(collect)
                 .build();
     }

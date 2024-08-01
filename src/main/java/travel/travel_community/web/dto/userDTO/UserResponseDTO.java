@@ -29,6 +29,7 @@ public class UserResponseDTO {
     @AllArgsConstructor
     public static class SignInResultDTO {
         private String token;
+        private String userid;
     }
 
     @Builder

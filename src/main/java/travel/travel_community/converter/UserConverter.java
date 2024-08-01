@@ -23,9 +23,10 @@ public class UserConverter {
                 .build();
     }
 
-    public static UserResponseDTO.SignInResultDTO toSignInResultDTO(String jwtToken){
+    public static UserResponseDTO.SignInResultDTO toSignInResultDTO(String jwtToken, String userid){
         return UserResponseDTO.SignInResultDTO.builder()
                 .token(jwtToken)
+                .userid(userid)
                 .build();
     }
 

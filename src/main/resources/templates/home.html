@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Travel Board</title>
+</head>
+<body>
+<h1>Travel Board</h1>
+<a href="/create">Create New Post</a>
+<div th:each="post : ${posts}">
+    <h2><a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}"></a></h2>
+    <p th:text="${#strings.abbreviate(post.content, 100)}"></p>
+</div>
+</body>
+</html>

@@ -40,7 +40,7 @@ public class AuthenticationController {
      */
     @PostMapping("/signIn")
     public ApiResponse<UserResponseDTO.SignInResultDTO> authenticate(@RequestBody @Valid UserRequestDTO.SignInDTO request) {
-        return ApiResponse.onSuccess(UserConverter.toSignInResultDTO(authenticationService.signIn(request)));
+        return ApiResponse.onSuccess(UserConverter.toSignInResultDTO(authenticationService.signIn(request), request.getUserid()));
     }
 
     /**

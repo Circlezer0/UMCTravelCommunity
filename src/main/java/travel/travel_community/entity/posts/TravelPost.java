@@ -2,8 +2,10 @@ package travel.travel_community.entity.posts;
 
 import jakarta.persistence.*;
 import lombok.*;
+import travel.travel_community.entity.Image;
 import travel.travel_community.entity.User;
 import travel.travel_community.entity.baseEntity.AbstractPost;
+import travel.travel_community.entity.mapping.ImageOfTravelPost;
 import travel.travel_community.entity.mapping.LikedTravelPost;
 import travel.travel_community.entity.mapping.ScrapTravelPost;
 import travel.travel_community.entity.posts.regions.Continent;
@@ -63,5 +65,20 @@ public class TravelPost extends AbstractPost {
     public void removeScrap(User user) {
         this.scrap.removeIf(scrapTravelPost -> scrapTravelPost.getUser().equals(user));
         this.setScrapCount(this.scrap.size());
+    }
+
+    // 이미지 매핑
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImageOfTravelPost> imageUrls = new ArrayList<>();
+    public void addImageMapping(Image image) {
+        ImageOfTravelPost mapping = ImageOfTravelPost.builder()
+                .post(this)
+                .image(image)
+                .build();
+        imageUrls.add(mapping);
+    }
+
+    public void removeImageMapping(Image image) {
+        imageUrls.removeIf(mapping -> mapping.getImage().equals(image));
     }
 }

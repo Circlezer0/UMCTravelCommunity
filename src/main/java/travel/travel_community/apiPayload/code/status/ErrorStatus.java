@@ -42,6 +42,12 @@ public enum ErrorStatus implements BaseErrorCode {
     PAGE_OUT_OF_BOUNDS(HttpStatus.BAD_REQUEST, "POST4002", "Page number out of bounds."),
     ORDER_BY_VALUE_ERROR(HttpStatus.BAD_REQUEST, "POST4003", "Order keyword not found."),
 
+
+    // 이미지 관련 에러
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "IMAGE4001", "Image not found."),
+    IMAGE_DELETE_FAILED(HttpStatus.BAD_REQUEST, "IMAGE4002", "Failed to delete Image."),
+    IMAGE_STORE_FAILED(HttpStatus.BAD_REQUEST, "IMAGE4003", "Failed to store image."),
+
     // 예시,,,
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),
 
@@ -56,7 +62,9 @@ public enum ErrorStatus implements BaseErrorCode {
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "STORE_4001","가게가 없습니다."),
 
     // Region Error
-    REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "REGION_4001", "지역이 없습니다"),
+    CONTINENT_NOT_FOUND(HttpStatus.NOT_FOUND, "REGION_4001", "지역이 없습니다"),
+    COUNTRY_NOT_FOUND(HttpStatus.NOT_FOUND, "REGION_4002", "지역이 없습니다"),
+    REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "REGION_4003", "지역이 없습니다"),
 
     // Review Error
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "REVIEW_4001", "리뷰가 없습니다"),

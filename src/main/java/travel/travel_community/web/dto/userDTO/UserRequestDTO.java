@@ -3,12 +3,13 @@ package travel.travel_community.web.dto.userDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import travel.travel_community.validation.annotation.ExistUser;
 
 public class UserRequestDTO {
 
     @Getter
     public static class SignInDTO {
-        @NotBlank
+        @ExistUser
         private String userid;
         @NotBlank
         private String password;
@@ -53,7 +54,7 @@ public class UserRequestDTO {
 
     @Getter
     public static class ResetPasswordDTO {
-        @NotBlank
+        @ExistUser
         private String userid;
         @NotBlank
         private String password;

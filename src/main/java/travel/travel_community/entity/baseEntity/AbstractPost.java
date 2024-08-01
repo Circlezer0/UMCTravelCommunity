@@ -1,10 +1,7 @@
 package travel.travel_community.entity.baseEntity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import travel.travel_community.entity.User;
 
 @MappedSuperclass

@@ -1,7 +1,9 @@
 package travel.travel_community.web.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import travel.travel_community.apiPayload.ApiResponse;
 import travel.travel_community.apiPayload.code.status.ErrorStatus;
@@ -9,12 +11,15 @@ import travel.travel_community.apiPayload.exception.handler.PostHandler;
 import travel.travel_community.converter.postConverter.PostConverter;
 import travel.travel_community.converter.RegionConverter;
 import travel.travel_community.converter.postConverter.TravelPostConverter;
+import travel.travel_community.entity.User;
 import travel.travel_community.entity.posts.TravelPost;
+import travel.travel_community.entity.posts.regions.Continent;
 import travel.travel_community.entity.posts.regions.Country;
 import travel.travel_community.service.*;
 import travel.travel_community.service.system.ServerLogService;
 import travel.travel_community.web.dto.postDTO.PostRequestDTO;
 import travel.travel_community.web.dto.postDTO.PostResponseDTO;
+import travel.travel_community.web.dto.postDTO.travelPostDTO.TravelPostRequestDTO;
 import travel.travel_community.web.dto.postDTO.travelPostDTO.TravelPostResponseDTO;
 import travel.travel_community.web.dto.regionDTO.RegionResponseDTO;
 
@@ -28,10 +33,6 @@ public class TravelPostController {
     private final UserService userService;
     private final TravelPostService travelPostService;
     private final TravelPostCategoryService travelPostCategoryService;
-    private final TravelItemPostService travelItemPostService;
-    private final TravelItemPostCategoryService travelItemPostCategoryService;
-
-    private final ServerLogService serverLogService;
 
     //--------------------------- 메인페이지 기능 ---------------------------
     /**
@@ -39,9 +40,9 @@ public class TravelPostController {
      * @return 여행 게시글 리스트 (30개)
      */
     @GetMapping("/topTravelPosts")
-    public ApiResponse<PostResponseDTO.GetTopTravelPostsResultDTO> getTopTravelPosts() {
+    public ApiResponse<PostResponseDTO.TravelPostsResultDTO> getTopTravelPosts() {
         List<TravelPost> posts = travelPostService.getTopTravelPosts();
-        return ApiResponse.onSuccess(PostConverter.toTopTravelPostsResultDTO(posts));
+        return ApiResponse.onSuccess(PostConverter.toTravelPostsResultDTO(posts));
     }
 
     /**
@@ -94,4 +95,26 @@ public class TravelPostController {
         );
     }
     //---------------------------------------------------------------------
+
+
+    @PostMapping("/create")
+    public ApiResponse<PostResponseDTO.TravelPostDTO> createPost(@RequestBody @Valid TravelPostRequestDTO.CreatePostDTO request) {
+        User author = userService.findUserByUserId(request.getUserid());
+        Continent continent = travelPostCategoryService.findContinentById(request.getContinent());
+        Country country = travelPostCategoryService.findCountryById(request.getCountry());
+        TravelPost post = new TravelPost();
+        post.setAuthor(author);
+        post.setContinent(continent);
+        post.setCountry(country);
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+        post = travelPostService.createPost(post);
+        return ApiResponse.onSuccess(PostConverter.toTravelPostResultDTO(post));
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<PostResponseDTO.TravelPostDTO> getPost(@PathVariable Long id) {
+        TravelPost post = travelPostService.findTravelPostById(id);
+        return ApiResponse.onSuccess(PostConverter.toTravelPostResultDTO(post));
+    }
 }
