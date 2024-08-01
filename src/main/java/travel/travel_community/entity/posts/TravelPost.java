@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import travel.travel_community.entity.User;
 import travel.travel_community.entity.baseEntity.AbstractPost;
-import travel.travel_community.entity.baseEntity.TimeEntity;
-import travel.travel_community.entity.mapping.LikedPost;
+import travel.travel_community.entity.mapping.LikedTravelPost;
+import travel.travel_community.entity.mapping.ScrapTravelPost;
 import travel.travel_community.entity.posts.regions.Continent;
 import travel.travel_community.entity.posts.regions.Country;
 
@@ -28,23 +28,40 @@ public class TravelPost extends AbstractPost {
     private Country country;
 
     @OneToMany(mappedBy = "travelPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    private List<TravelComment> travelComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LikedPost> likes = new ArrayList<>();
+    private List<LikedTravelPost> likes = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ScrapTravelPost> scrap = new ArrayList<>();
 
     @Override
     public void addLike(User user) {
-        LikedPost likedPost = new LikedPost();
-        likedPost.setUser(user);
-        likedPost.setPost(this);
-        this.likes.add(likedPost);
-        this.setLikeCount(this.getLikeCount() + 1);
+        LikedTravelPost likedTravelPost = new LikedTravelPost();
+        likedTravelPost.setUser(user);
+        likedTravelPost.setPost(this);
+        this.likes.add(likedTravelPost);
+        this.increaseLikeCount();
     }
 
     @Override
     public void removeLike(User user) {
-        this.likes.removeIf(likedPost -> likedPost.getUser().equals(user));
+        this.likes.removeIf(likedTravelPost -> likedTravelPost.getUser().equals(user));
         this.setLikeCount(this.likes.size());
+    }
+
+    @Override
+    public void addScrap(User user) {
+        ScrapTravelPost scrapTravelPost = new ScrapTravelPost();
+        scrapTravelPost.setUser(user);
+        scrapTravelPost.setPost(this);
+        this.scrap.add(scrapTravelPost);
+        this.increaseScrapCount();
+    }
+
+    @Override
+    public void removeScrap(User user) {
+        this.scrap.removeIf(scrapTravelPost -> scrapTravelPost.getUser().equals(user));
+        this.setScrapCount(this.scrap.size());
     }
 }

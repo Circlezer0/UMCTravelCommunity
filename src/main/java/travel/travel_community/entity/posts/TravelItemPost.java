@@ -7,8 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import travel.travel_community.entity.User;
 import travel.travel_community.entity.baseEntity.AbstractPost;
-import travel.travel_community.entity.baseEntity.TimeEntity;
-import travel.travel_community.entity.mapping.TravelItemLikedPost;
+import travel.travel_community.entity.mapping.LikedTravelItemPost;
+import travel.travel_community.entity.mapping.ScrapTravelItemPost;
+import travel.travel_community.entity.mapping.ScrapTravelPost;
 import travel.travel_community.entity.mapping.TravelItemPostCategory;
 import travel.travel_community.entity.posts.categories.TravelItemCategory;
 
@@ -30,21 +31,38 @@ public class TravelItemPost extends AbstractPost {
     private List<TravelItemComment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TravelItemLikedPost> likes = new ArrayList<>();
+    private List<LikedTravelItemPost> likes = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ScrapTravelItemPost> scrap = new ArrayList<>();
 
     @Override
     public void addLike(User user) {
-        TravelItemLikedPost likedPost = new TravelItemLikedPost();
+        LikedTravelItemPost likedPost = new LikedTravelItemPost();
         likedPost.setUser(user);
         likedPost.setPost(this);
         this.likes.add(likedPost);
-        this.setLikeCount(this.getLikeCount() + 1);
+        this.increaseLikeCount();
     }
 
     @Override
     public void removeLike(User user) {
         this.likes.removeIf(likedPost -> likedPost.getUser().equals(user));
         this.setLikeCount(this.likes.size());
+    }
+
+    @Override
+    public void addScrap(User user) {
+        ScrapTravelItemPost scrapTravelItemPost = new ScrapTravelItemPost();
+        scrapTravelItemPost.setUser(user);
+        scrapTravelItemPost.setPost(this);
+        this.scrap.add(scrapTravelItemPost);
+        this.increaseScrapCount();
+    }
+
+    @Override
+    public void removeScrap(User user) {
+        this.scrap.removeIf(scrapTravelItemPost -> scrapTravelItemPost.getUser().equals(user));
+        this.setScrapCount(this.scrap.size());
     }
 
     public void addCategory(TravelItemCategory category) {

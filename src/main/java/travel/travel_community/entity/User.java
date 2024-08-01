@@ -8,9 +8,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import travel.travel_community.entity.baseEntity.TimeEntity;
 import travel.travel_community.entity.enums.Role;
-import travel.travel_community.entity.mapping.LikedPost;
-import travel.travel_community.entity.mapping.TravelItemLikedPost;
-import travel.travel_community.entity.posts.Comment;
+import travel.travel_community.entity.mapping.LikedTravelPost;
+import travel.travel_community.entity.mapping.LikedTravelItemPost;
+import travel.travel_community.entity.mapping.ScrapTravelItemPost;
+import travel.travel_community.entity.mapping.ScrapTravelPost;
+import travel.travel_community.entity.posts.TravelComment;
 import travel.travel_community.entity.posts.TravelItemComment;
 import travel.travel_community.entity.posts.TravelItemPost;
 import travel.travel_community.entity.posts.TravelPost;
@@ -54,62 +56,72 @@ public class User extends TimeEntity implements UserDetails {
     }
 
     @OneToMany(mappedBy = "author")
-    private List<TravelPost> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "author")
-    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<LikedPost> likedPosts = new ArrayList<>();
-
-    // 좋아요한 게시글 찾기
-    public List<TravelPost> getLikedPosts() {
-        return likedPosts.stream()
-                .map(LikedPost::getPost)
-                .collect(Collectors.toList());
-    }
-
-    // 작성한 게시글 찾기
-    public List<TravelPost> getAuthoredPosts() {
-        return posts;
-    }
-
-    // 댓글 단 게시글 찾기
-    public List<TravelPost> getCommentedPosts() {
-        return comments.stream()
-                .map(Comment::getTravelPost)
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
-
-
+    private List<TravelPost> travelPosts = new ArrayList<>();
     @OneToMany(mappedBy = "author")
     private List<TravelItemPost> travelItemPosts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "author")
-    private List<TravelItemComment> travelItemComments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<TravelItemLikedPost> likedTravelItemPosts = new ArrayList<>();
-
-    // 여행 물품 게시글 관련 메서드
-    public List<TravelItemPost> getLikedTravelItemPosts() {
-        return likedTravelItemPosts.stream()
-                .map(TravelItemLikedPost::getPost)
-                .collect(Collectors.toList());
+    // 작성한 게시글 찾기
+    public List<TravelPost> getAuthoredTravelPosts() {
+        return travelPosts;
     }
-
     public List<TravelItemPost> getAuthoredTravelItemPosts() {
         return travelItemPosts;
     }
 
+
+    @OneToMany(mappedBy = "author")
+    private List<TravelComment> travelComments = new ArrayList<>();
+    @OneToMany(mappedBy = "author")
+    private List<TravelItemComment> travelItemComments = new ArrayList<>();
+    // 댓글 단 게시글 찾기
+    public List<TravelPost> getCommentedTravelPosts() {
+        return travelComments.stream()
+                .map(TravelComment::getTravelPost)
+                .distinct()
+                .collect(Collectors.toList());
+    }
     public List<TravelItemPost> getCommentedTravelItemPosts() {
         return travelItemComments.stream()
                 .map(TravelItemComment::getTravelItemPost)
                 .distinct()
                 .collect(Collectors.toList());
     }
+
+
+    @OneToMany(mappedBy = "user")
+    private List<LikedTravelPost> likedTravelPosts = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<LikedTravelItemPost> likedTravelItemPosts = new ArrayList<>();
+    // 좋아요한 게시글 찾기
+    public List<TravelPost> getLikedTravelPosts() {
+        return likedTravelPosts.stream()
+                .map(LikedTravelPost::getPost)
+                .collect(Collectors.toList());
+    }
+    public List<TravelItemPost> getLikedTravelItemPosts() {
+        return likedTravelItemPosts.stream()
+                .map(LikedTravelItemPost::getPost)
+                .collect(Collectors.toList());
+    }
+
+
+    @OneToMany(mappedBy = "user")
+    private List<ScrapTravelPost> scrapTravelPosts = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<ScrapTravelItemPost> scrapTravelItemPosts = new ArrayList<>();
+    // 스크랩한 게시글 찾기
+    public List<TravelPost> getScrapTravelPosts() {
+        return scrapTravelPosts.stream()
+                .map(ScrapTravelPost::getPost)
+                .collect(Collectors.toList());
+    }
+    public List<TravelItemPost> getScrapTravelItemPosts() {
+        return scrapTravelItemPosts.stream()
+                .map(ScrapTravelItemPost::getPost)
+                .collect(Collectors.toList());
+    }
+
+
+
 
 
     /**
