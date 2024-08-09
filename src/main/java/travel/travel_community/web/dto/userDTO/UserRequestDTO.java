@@ -3,9 +3,17 @@ package travel.travel_community.web.dto.userDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.Setter;
 import travel.travel_community.validation.annotation.ExistUser;
 
 public class UserRequestDTO {
+
+    @Getter
+    @Setter
+    public static class UserIdDTO {
+        @ExistUser
+        private String userid;
+    }
 
     @Getter
     public static class SignInDTO {

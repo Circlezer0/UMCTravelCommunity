@@ -1,10 +1,13 @@
 package travel.travel_community.converter;
 
+import travel.travel_community.converter.postConverter.PostConverter;
 import travel.travel_community.entity.User;
+import travel.travel_community.web.dto.postDTO.PostResponseDTO;
 import travel.travel_community.web.dto.userDTO.UserRequestDTO;
 import travel.travel_community.web.dto.userDTO.UserResponseDTO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserConverter {
 
@@ -64,9 +67,13 @@ public class UserConverter {
                 .build();
     }
 
-    public static UserResponseDTO.TopUsersResultDTO toTopUserResultDTO(List<User> users) {
-        return UserResponseDTO.TopUsersResultDTO.builder()
-                .topUsers(users)
+    public static UserResponseDTO.UsersResultDTO toUsersResultDTO(List<User> users) {
+        List<UserResponseDTO.UserDTO> collect = users.stream()
+                .map(UserConverter::toUserDTO)
+                .collect(Collectors.toList());
+
+        return UserResponseDTO.UsersResultDTO.builder()
+                .users(collect)
                 .build();
     }
 }

@@ -1,13 +1,11 @@
 package travel.travel_community.web.dto.userDTO;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import travel.travel_community.entity.User;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class UserResponseDTO {
@@ -84,11 +82,12 @@ public class UserResponseDTO {
         private String userid;
     }
 
+
     @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class TopUsersResultDTO {
-        private List<User> topUsers;
+    public static class UsersResultDTO {
+        private List<UserDTO> users;
     }
 }

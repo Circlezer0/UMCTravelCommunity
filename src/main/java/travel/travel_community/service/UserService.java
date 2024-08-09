@@ -9,7 +9,6 @@ import travel.travel_community.apiPayload.exception.handler.UserHandler;
 import travel.travel_community.entity.User;
 import travel.travel_community.repository.UserRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +32,14 @@ public class UserService {
         return userOpt.get();
     }
 
-    public User findUserId(String email) {
+    public User findUserByEmail(String email) {
         Optional<User> userOpt = userRepository.findUserByEmail(email);
         if (userOpt.isEmpty()) throw new UserHandler(ErrorStatus.USER_NOT_FOUND);
         return userOpt.get();
+    }
+
+    public List<User> findAll(){
+        return userRepository.findAll();
     }
 
 

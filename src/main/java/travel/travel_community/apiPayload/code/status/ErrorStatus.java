@@ -14,6 +14,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 에러, 관리자에게 문의 바랍니다."),
     _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다."),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
+    _NO_AUTHORITY(HttpStatus.UNAUTHORIZED, "COMMON402", "접근 권한이 없습니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
 
@@ -47,6 +48,10 @@ public enum ErrorStatus implements BaseErrorCode {
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "IMAGE4001", "Image not found."),
     IMAGE_DELETE_FAILED(HttpStatus.BAD_REQUEST, "IMAGE4002", "Failed to delete Image."),
     IMAGE_STORE_FAILED(HttpStatus.BAD_REQUEST, "IMAGE4003", "Failed to store image."),
+
+    // 댓글 관련 에러
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4001", "Comment not found."),
+    PARENT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4002", "Parent comment not found."),
 
     // 예시,,,
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),

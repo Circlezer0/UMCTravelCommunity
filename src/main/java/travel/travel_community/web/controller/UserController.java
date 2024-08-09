@@ -23,6 +23,11 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
+    @GetMapping("/allUsers")
+    public ApiResponse<UserResponseDTO.UsersResultDTO> getAllUsers(){
+        return ApiResponse.onSuccess(UserConverter.toUsersResultDTO(userService.findAll()));
+    }
+
     /**
      * 유저 정보 조회
      * 발생하는 예외 종류
@@ -58,7 +63,7 @@ public class UserController {
     public ApiResponse<UserResponseDTO.FindUserIdResultDTO> findUserId(@RequestBody @Valid UserRequestDTO.FindUserIdDTO request) {
         String email = request.getEmail();
         System.out.println("email = " + email);
-        return ApiResponse.onSuccess(UserConverter.toFindUserIdResultDTO(userService.findUserId(email)));
+        return ApiResponse.onSuccess(UserConverter.toFindUserIdResultDTO(userService.findUserByEmail(email)));
     }
 
     /**
@@ -83,10 +88,10 @@ public class UserController {
      * @return 유저 리스트
      */
     @GetMapping("/topUsers")
-    public ApiResponse<UserResponseDTO.TopUsersResultDTO> getTopUsers() {
+    public ApiResponse<UserResponseDTO.UsersResultDTO> getTopUsers() {
         // 랜덤으로 유저 30명 가져오는걸 나중에 좋아요를 받은 순서대로 정렬해서 유저를 가져와야 함
         List<User> users = userService.getRandomUsers();
-        return ApiResponse.onSuccess(UserConverter.toTopUserResultDTO(users));
+        return ApiResponse.onSuccess(UserConverter.toUsersResultDTO(users));
     }
     //----------------------------------------------------------------------------------------------
 }

@@ -8,9 +8,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import travel.travel_community.apiPayload.code.status.ErrorStatus;
 import travel.travel_community.apiPayload.exception.handler.ImageHandler;
-import travel.travel_community.apiPayload.exception.handler.PostHandler;
 import travel.travel_community.entity.Image;
-import travel.travel_community.repository.ImagePostMappingRepository;
+import travel.travel_community.repository.mapping.ImagePostMappingRepository;
 import travel.travel_community.repository.ImageRepository;
 
 import java.io.File;

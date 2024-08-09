@@ -40,7 +40,9 @@ public abstract class AbstractPost extends TimeEntity {
     public abstract void removeScrap(User user);
 
     public void increaseLikeCount() {this.likeCount++;}
+    public void decreaseLikeCount() {this.likeCount--;}
     public void increaseScrapCount() {this.scrapCount++;}
+    public void decreaseScrapCount() {this.scrapCount--;}
     public void increaseViewCount() {
         this.viewCount++;
     }

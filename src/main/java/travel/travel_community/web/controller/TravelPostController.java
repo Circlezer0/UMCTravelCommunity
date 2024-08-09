@@ -3,7 +3,6 @@ package travel.travel_community.web.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import travel.travel_community.apiPayload.ApiResponse;
 import travel.travel_community.apiPayload.code.status.ErrorStatus;
@@ -16,12 +15,12 @@ import travel.travel_community.entity.posts.TravelPost;
 import travel.travel_community.entity.posts.regions.Continent;
 import travel.travel_community.entity.posts.regions.Country;
 import travel.travel_community.service.*;
-import travel.travel_community.service.system.ServerLogService;
 import travel.travel_community.web.dto.postDTO.PostRequestDTO;
 import travel.travel_community.web.dto.postDTO.PostResponseDTO;
 import travel.travel_community.web.dto.postDTO.travelPostDTO.TravelPostRequestDTO;
 import travel.travel_community.web.dto.postDTO.travelPostDTO.TravelPostResponseDTO;
 import travel.travel_community.web.dto.regionDTO.RegionResponseDTO;
+import travel.travel_community.web.dto.userDTO.UserRequestDTO;
 
 import java.util.List;
 
@@ -60,7 +59,7 @@ public class TravelPostController {
 
     //------------------------- 게시글 조회 ---------------------------------
     @GetMapping("/allPosts")
-    public ApiResponse<TravelPostResponseDTO.ViewAllResultDTO> getAllPosts(@ModelAttribute PostRequestDTO.ViewAllDTO request) {
+    public ApiResponse<TravelPostResponseDTO.ViewAllResultDTO> getAllPosts(@ModelAttribute @Valid PostRequestDTO.ViewAllDTO request) {
         String orderBy = request.getOrderBy();
         int page = request.getPage() - 1;
 
@@ -116,6 +115,33 @@ public class TravelPostController {
     @GetMapping("/{id}")
     public ApiResponse<PostResponseDTO.TravelPostDTO> getPost(@PathVariable Long id) {
         TravelPost post = travelPostService.findTravelPostById(id);
+        return ApiResponse.onSuccess(PostConverter.toTravelPostResultDTO(post));
+    }
+
+    @GetMapping("/{id}/viewCount/increase")
+    public ApiResponse<PostResponseDTO.TravelPostDTO> incrementViewCount(@PathVariable Long id){
+        TravelPost post = travelPostService.findTravelPostById(id);
+        post = travelPostService.increaseViewCount(post);
+        return ApiResponse.onSuccess(PostConverter.toTravelPostResultDTO(post));
+    }
+
+    @GetMapping("/{id}/like/toggle")
+    public ApiResponse<PostResponseDTO.TravelPostDTO> toggleLike(
+            @PathVariable Long id, @ModelAttribute @Valid UserRequestDTO.UserIdDTO request){
+        String userid = request.getUserid();
+        User user = userService.findUserByUserId(userid);
+        TravelPost post = travelPostService.findTravelPostById(id);
+        post = travelPostService.toggleLike(post, user);
+        return ApiResponse.onSuccess(PostConverter.toTravelPostResultDTO(post));
+    }
+
+    @GetMapping("/{id}/scrap/toggle")
+    public ApiResponse<PostResponseDTO.TravelPostDTO> toggleScrap(
+            @PathVariable Long id, @ModelAttribute @Valid UserRequestDTO.UserIdDTO request){
+        String userid = request.getUserid();
+        User user = userService.findUserByUserId(userid);
+        TravelPost post = travelPostService.findTravelPostById(id);
+        post = travelPostService.toggleScrap(post, user);
         return ApiResponse.onSuccess(PostConverter.toTravelPostResultDTO(post));
     }
 }
