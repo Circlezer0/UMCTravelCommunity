@@ -24,6 +24,7 @@ public class PostResponseDTO {
         int scrapCount;
         int viewCount;
         LocalDateTime createDate;
+        String repImage;
         UserResponseDTO.UserDTO user;
     }
 

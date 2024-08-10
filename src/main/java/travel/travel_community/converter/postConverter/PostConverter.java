@@ -1,6 +1,7 @@
 package travel.travel_community.converter.postConverter;
 
 import travel.travel_community.converter.UserConverter;
+import travel.travel_community.entity.mapping.ImageOfTravelPost;
 import travel.travel_community.entity.posts.TravelItemPost;
 import travel.travel_community.entity.posts.TravelPost;
 import travel.travel_community.web.dto.postDTO.PostResponseDTO;
@@ -11,6 +12,11 @@ import java.util.stream.Collectors;
 public class PostConverter {
 
     public static PostResponseDTO.TravelPostDTO toTravelPostResultDTO(TravelPost post) {
+        String imageUrl = "";
+        List<ImageOfTravelPost> imageUrls = post.getImageUrls();
+        if(!imageUrls.isEmpty()){
+            imageUrl = imageUrls.get(0).getImage().getUrl();
+        }
         return PostResponseDTO.TravelPostDTO.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -19,6 +25,7 @@ public class PostConverter {
                 .scrapCount(post.getScrapCount())
                 .viewCount(post.getViewCount())
                 .createDate(post.getCreatedDate())
+                .repImage(imageUrl)
                 .user(UserConverter.toUserDTO(post.getAuthor()))
                 .build();
     }

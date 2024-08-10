@@ -16,6 +16,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _NO_AUTHORITY(HttpStatus.UNAUTHORIZED, "COMMON402", "접근 권한이 없습니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
+    _NO_PARAMETER(HttpStatus.BAD_REQUEST, "COMMON404", "파라미터가 없습니다."),
 
 
     // 멤버 관려 에러

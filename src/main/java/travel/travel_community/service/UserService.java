@@ -19,6 +19,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public boolean isExistByUserid(String userid){
+        return userRepository.existsUserByUserid(userid);
+    }
+    public boolean isExistByNickname(String nickname){
+        return userRepository.existsUserByNickname(nickname);
+    }
+    public boolean isExistByEmail(String email){
+        return userRepository.existsUserByEmail(email);
+    }
+
     public boolean isValidUser(String userid){
         Optional<User> userByUserid = userRepository.findUserByUserid(userid);
         if(userByUserid.isEmpty())return false;

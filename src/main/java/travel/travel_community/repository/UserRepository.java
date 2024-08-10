@@ -13,10 +13,15 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByEmail(String email);
     Optional<User> findUserByUserid(String userid);
+    Optional<User> findUserByNickname(String nickname);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM users ORDER BY RAND()")
+    @Query(nativeQuery = true, value = "SELECT * FROM user ORDER BY RAND()")
     List<User> findRandomUsers(Pageable pageable);
 
     @Query("SELECT us FROM User us WHERE us.createdDate >= :startDate")
     List<User> findRecentSignupUsers(@Param("startDate") LocalDateTime startDate);
+
+    boolean existsUserByUserid(String userid);
+    boolean existsUserByNickname(String nickname);
+    boolean existsUserByEmail(String email);
 }

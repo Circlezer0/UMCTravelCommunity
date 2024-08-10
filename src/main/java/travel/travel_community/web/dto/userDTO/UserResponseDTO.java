@@ -90,4 +90,12 @@ public class UserResponseDTO {
     public static class UsersResultDTO {
         private List<UserDTO> users;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DuplicateCheckResultDTO {
+        private boolean isUnique;
+    }
 }

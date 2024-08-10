@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import travel.travel_community.apiPayload.ApiResponse;
 import travel.travel_community.apiPayload.code.status.ErrorStatus;
+import travel.travel_community.apiPayload.exception.GeneralException;
 import travel.travel_community.apiPayload.exception.handler.UserHandler;
 import travel.travel_community.converter.UserConverter;
 import travel.travel_community.service.system.AuthenticationService;
@@ -23,6 +24,28 @@ public class AuthenticationController {
     private final MailSendService mailSendService;
     private final UserService userService;
 
+    @GetMapping("/check/userid")
+    public ApiResponse<UserResponseDTO.DuplicateCheckResultDTO> useridUniqueCheck(@RequestParam String userid){
+        if(userid == null || userid.isEmpty())throw new GeneralException(ErrorStatus._NO_PARAMETER);
+        return ApiResponse.onSuccess(UserResponseDTO.DuplicateCheckResultDTO.builder()
+                        .isUnique(!userService.isExistByUserid(userid))
+                .build());
+    }
+    @GetMapping("/check/email")
+    public ApiResponse<UserResponseDTO.DuplicateCheckResultDTO> emailUniqueCheck(@RequestParam String email){
+        if(email == null || email.isEmpty())throw new GeneralException(ErrorStatus._NO_PARAMETER);
+        return ApiResponse.onSuccess(UserResponseDTO.DuplicateCheckResultDTO.builder()
+                .isUnique(!userService.isExistByEmail(email))
+                .build());
+    }
+    @GetMapping("/check/nickname")
+    public ApiResponse<UserResponseDTO.DuplicateCheckResultDTO> nicknameUniqueCheck(@RequestParam String nickname){
+        if(nickname == null || nickname.isEmpty())throw new GeneralException(ErrorStatus._NO_PARAMETER);
+        return ApiResponse.onSuccess(UserResponseDTO.DuplicateCheckResultDTO.builder()
+                .isUnique(!userService.isExistByNickname(nickname))
+                .build());
+    }
+
     /**
      * 회원가입
      * @param request
@@ -30,7 +53,6 @@ public class AuthenticationController {
      */
     @PostMapping("/signup")
     public ApiResponse<UserResponseDTO.SignupResultDTO> register(@RequestBody @Valid UserRequestDTO.SignupDTO request) {
-        System.out.println("AuthenticationController.register");
         return ApiResponse.onSuccess(UserConverter.toSignupResultDTO(authenticationService.signup(request)));
     }
 

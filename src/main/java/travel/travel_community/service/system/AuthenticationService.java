@@ -23,14 +23,15 @@ public class AuthenticationService{
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     public String signup(UserRequestDTO.SignupDTO request) {
-        User prevUser = userRepository.findUserByUserid(request.getUserid()).orElseGet(() -> null);
-        if (prevUser != null) {
+        userRepository.findUserByUserid(request.getUserid()).ifPresent(user -> {
             throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
-        }
-        prevUser = userRepository.findUserByEmail(request.getEmail()).orElseGet(() -> null);
-        if (prevUser != null) {
+        });
+        userRepository.findUserByEmail(request.getEmail()).ifPresent(user -> {
             throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
-        }
+        });
+        userRepository.findUserByNickname(request.getNickname()).ifPresent(user -> {
+            throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
+        });
 
         // 회원가입을 위해 유저를 db에 등록
         User user = User.builder()
@@ -53,6 +54,7 @@ public class AuthenticationService{
         // 사용자가 DB에 존재하는지 확인
         User user = userRepository.findUserByUserid(request.getUserid())
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
 
         // 인증 시도. 인증에 실패하면 AuthenticationError 반환됨
         try {
