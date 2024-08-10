@@ -179,6 +179,16 @@ public class TravelPostService {
     }
 
     /**
+     * 게시글을 스크랩수 순으로 조회
+     * @param page 페이지 번호 (0부터 시작)
+     * @return TravelPost 리스트
+     */
+    public Page<TravelPost> getMostScrapedPosts(int page){
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByOOrderByScrapCountDesc(pageable);
+    }
+
+    /**
      * html 형식으로 된 게시글의 본문에서 img 태그의 src 내용을 추출하여 리스트로 반환하는 메소드입니다.
      * 추출된 내용은 DB에 저장된 이미지 url 입니다.
      * @param content 게시글 본문

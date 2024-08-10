@@ -29,6 +29,9 @@ public interface TravelPostRepository extends JpaRepository<TravelPost, Long> {
     // 좋아요순 조회 (likeCount 기준 내림차순)
     Page<TravelPost> findAllByOrderByLikeCountDesc(Pageable pageable);
 
+    // 좋아요순 조회 (likeCount 기준 내림차순)
+    Page<TravelPost> findAllByOOrderByScrapCountDesc(Pageable pageable);
+
     // 조회순 조회 (viewCount 기준 내림차순)
     Page<TravelPost> findAllByOrderByViewCountDesc(Pageable pageable);
 }

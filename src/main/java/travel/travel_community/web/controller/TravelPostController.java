@@ -73,6 +73,7 @@ public class TravelPostController {
             case "oldest" -> travelPostService.getOldestPosts(page);
             case "views" -> travelPostService.getMostViewedPosts(page);
             case "likes" -> travelPostService.getMostLikedPosts(page);
+            case "scrap" -> travelPostService.getMostScrapedPosts(page);
             case "name" -> travelPostService.getPostsByTitleAsc(page);
             // 에러 발생 코드
             default -> throw new PostHandler(ErrorStatus.ORDER_BY_VALUE_ERROR);
