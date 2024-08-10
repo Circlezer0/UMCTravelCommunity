@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import travel.travel_community.entity.posts.TravelPost;
+import travel.travel_community.entity.posts.regions.Continent;
+import travel.travel_community.entity.posts.regions.Country;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,19 +21,32 @@ public interface TravelPostRepository extends JpaRepository<TravelPost, Long> {
 
     // 최신순 조회 (createdDate 기준 내림차순)
     Page<TravelPost> findAllByOrderByCreatedDateDesc(Pageable pageable);
+    Page<TravelPost> findAllByContinentOrderByCreatedDateDesc(Pageable pageable, Continent continent);
+    Page<TravelPost> findAllByContinentAndCountryOrderByCreatedDateDesc(Pageable pageable, Continent continent, Country country);
 
     // 오래된순 조회 (createdDate 기준 오름차순)
     Page<TravelPost> findAllByOrderByCreatedDateAsc(Pageable pageable);
+    Page<TravelPost> findAllByContinentOrderByCreatedDateAsc(Pageable pageable, Continent continent);
+    Page<TravelPost> findAllByContinentAndCountryOrderByCreatedDateAsc(Pageable pageable, Continent continent, Country country);
 
     // 이름순 조회 (title 기준 오름차순)
     Page<TravelPost> findAllByOrderByTitleAsc(Pageable pageable);
+    Page<TravelPost> findAllByContinentOrderByTitleAsc(Pageable pageable, Continent continent);
+    Page<TravelPost> findAllByContinentAndCountryOrderByTitleAsc(Pageable pageable, Continent continent, Country country);
 
     // 좋아요순 조회 (likeCount 기준 내림차순)
     Page<TravelPost> findAllByOrderByLikeCountDesc(Pageable pageable);
+    Page<TravelPost> findAllByContinentOrderByLikeCountDesc(Pageable pageable, Continent continent);
+    Page<TravelPost> findAllByContinentAndCountryOrderByLikeCountDesc(Pageable pageable, Continent continent, Country country);
 
-    // 좋아요순 조회 (likeCount 기준 내림차순)
-    Page<TravelPost> findAllByOOrderByScrapCountDesc(Pageable pageable);
+    // 스크랩순 조회 (scrapCount 기준 내림차순)
+    Page<TravelPost> findAllByOrderByScrapCountDesc(Pageable pageable);
+    Page<TravelPost> findAllByContinentOrderByScrapCountDesc(Pageable pageable, Continent continent);
+    Page<TravelPost> findAllByContinentAndCountryOrderByScrapCountDesc(Pageable pageable, Continent continent, Country country);
 
     // 조회순 조회 (viewCount 기준 내림차순)
     Page<TravelPost> findAllByOrderByViewCountDesc(Pageable pageable);
+    Page<TravelPost> findAllByContinentOrderByViewCountDesc(Pageable pageable, Continent continent);
+    Page<TravelPost> findAllByContinentAndCountryOrderByViewCountDesc(Pageable pageable, Continent continent, Country country);
+
 }

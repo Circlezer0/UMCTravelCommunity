@@ -11,7 +11,7 @@ import travel.travel_community.validation.annotation.ExistContinent;
 
 @Component
 @RequiredArgsConstructor
-public class ContinentExistValidator implements ConstraintValidator<ExistContinent, Long> {
+public class ContinentExistValidator implements ConstraintValidator<ExistContinent, String> {
     private final TravelPostCategoryService travelPostCategoryService;
 
     @Override
@@ -20,7 +20,7 @@ public class ContinentExistValidator implements ConstraintValidator<ExistContine
     }
 
     @Override
-    public boolean isValid(Long value, ConstraintValidatorContext context) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
         if(CommonValidator.isNullId(value, context)){
             return false;
         }

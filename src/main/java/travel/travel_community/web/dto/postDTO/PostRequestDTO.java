@@ -17,5 +17,9 @@ public class PostRequestDTO {
         private String orderBy = "latest";
         @Builder.Default
         private int page = 1;
+        @Builder.Default
+        private String continent = "전체";
+        @Builder.Default
+        private String country = "전체";
     }
 }

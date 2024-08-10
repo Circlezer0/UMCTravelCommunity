@@ -5,9 +5,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import travel.travel_community.apiPayload.code.status.ErrorStatus;
-import travel.travel_community.service.TravelPostCategoryService;
 import travel.travel_community.service.UserService;
-import travel.travel_community.validation.annotation.ExistCountry;
 import travel.travel_community.validation.annotation.ExistUser;
 
 @Component

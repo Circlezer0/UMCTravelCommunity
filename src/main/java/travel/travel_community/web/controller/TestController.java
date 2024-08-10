@@ -1,12 +1,11 @@
 package travel.travel_community.web.controller;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import travel.travel_community.entity.Image;
 import travel.travel_community.entity.User;
 import travel.travel_community.entity.mapping.ImageOfTravelPost;
@@ -50,8 +49,8 @@ public class TestController {
     @PostMapping("/create")
     public String createPost(TravelPostRequestDTO.CreatePostDTO request) {
         User author = userService.findUserByUserId(request.getUserid());
-        Continent continent = travelPostCategoryService.findContinentById(request.getContinent());
-        Country country = travelPostCategoryService.findCountryById(request.getCountry());
+        Continent continent = travelPostCategoryService.findContinentByName(request.getContinent());
+        Country country = travelPostCategoryService.findCountryByNameAndContinent(request.getCountry(), continent);
         TravelPost post = new TravelPost();
         post.setAuthor(author);
         post.setContinent(continent);
@@ -60,5 +59,22 @@ public class TestController {
         post.setContent(request.getContent());
         post = travelPostService.createPost(post);
         return "redirect:/";
+    }
+
+    @GetMapping("/addContinent")
+    public String addContinent(@RequestParam(value = "continent") String continent){
+        travelPostCategoryService.addContinent(continent);
+        return "redirect:/";
+    }
+    @GetMapping("/addCountry")
+    public String addCountry(@RequestParam(value = "continent") String continent,
+                             @RequestParam(value = "country") String country){
+        Continent continentByName = travelPostCategoryService.findContinentByName(continent);
+        travelPostCategoryService.addCountry(continentByName,country);
+        return "redirect:/";
+    }
+    @PostConstruct
+    public void regionInit(){
+        travelPostCategoryService.initializeRegions();
     }
 }

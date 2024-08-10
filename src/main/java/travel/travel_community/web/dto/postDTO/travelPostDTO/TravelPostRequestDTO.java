@@ -22,8 +22,8 @@ public class TravelPostRequestDTO {
         @ExistUser
         private String userid;
         @ExistContinent
-        private Long continent;
+        private String continent;
         @ExistCountry
-        private Long country;
+        private String country;
     }
 }

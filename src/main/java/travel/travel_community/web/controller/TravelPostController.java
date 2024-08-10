@@ -62,6 +62,12 @@ public class TravelPostController {
     public ApiResponse<TravelPostResponseDTO.ViewAllResultDTO> getAllPosts(@ModelAttribute @Valid PostRequestDTO.ViewAllDTO request) {
         String orderBy = request.getOrderBy();
         int page = request.getPage() - 1;
+        String continent = request.getContinent();
+        String country = request.getCountry();
+        if(continent.equals("전체") && !country.equals("전체")){
+            Country countryTmp = travelPostCategoryService.findCountryByName(country);
+            continent = countryTmp.getContinent().getName();
+        }
 
         if(page < 0){
             throw new PostHandler(ErrorStatus.PAGE_OUT_OF_BOUNDS);
@@ -69,18 +75,25 @@ public class TravelPostController {
 
         // 정렬 키워드 분석
         Page<TravelPost> posts = switch (orderBy) {
-            case "latest" -> travelPostService.getLatestPosts(page);
-            case "oldest" -> travelPostService.getOldestPosts(page);
-            case "views" -> travelPostService.getMostViewedPosts(page);
-            case "likes" -> travelPostService.getMostLikedPosts(page);
-            case "scrap" -> travelPostService.getMostScrapedPosts(page);
-            case "name" -> travelPostService.getPostsByTitleAsc(page);
+            case "latest" -> travelPostService.getLatestPosts(page, continent, country);
+            case "oldest" -> travelPostService.getOldestPosts(page, continent, country);
+            case "views" -> travelPostService.getMostViewedPosts(page, continent, country);
+            case "likes" -> travelPostService.getMostLikedPosts(page, continent, country);
+            case "scrap" -> travelPostService.getMostScrapedPosts(page, continent, country);
+            case "name" -> travelPostService.getPostsByTitleAsc(page, continent, country);
             // 에러 발생 코드
             default -> throw new PostHandler(ErrorStatus.ORDER_BY_VALUE_ERROR);
         };
 
         if (posts == null) {
             throw new PostHandler(ErrorStatus.POST_NOT_FOUND);
+        }
+        if(posts.stream().findAny().isEmpty()){
+            return ApiResponse.onSuccess(
+                    TravelPostConverter.toViewAllResultDTO(
+                            posts, page + 1, orderBy, 1, 1
+                    )
+            );
         }
         if (posts.getTotalPages() <= page) {
             throw new PostHandler(ErrorStatus.PAGE_OUT_OF_BOUNDS);
@@ -101,8 +114,8 @@ public class TravelPostController {
     @PostMapping("/create")
     public ApiResponse<PostResponseDTO.TravelPostDTO> createPost(@RequestBody @Valid TravelPostRequestDTO.CreatePostDTO request) {
         User author = userService.findUserByUserId(request.getUserid());
-        Continent continent = travelPostCategoryService.findContinentById(request.getContinent());
-        Country country = travelPostCategoryService.findCountryById(request.getCountry());
+        Continent continent = travelPostCategoryService.findContinentByName(request.getContinent());
+        Country country = travelPostCategoryService.findCountryByNameAndContinent(request.getCountry(), continent);
         TravelPost post = new TravelPost();
         post.setAuthor(author);
         post.setContinent(continent);

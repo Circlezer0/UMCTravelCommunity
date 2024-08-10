@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ContinentRepository extends JpaRepository<Continent, Long> {
     Optional<Continent> findCountryByName(String name);
+    boolean existsByName(String name);
 }

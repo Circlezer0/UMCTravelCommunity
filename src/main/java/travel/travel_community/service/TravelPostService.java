@@ -11,6 +11,8 @@ import travel.travel_community.apiPayload.exception.handler.PostHandler;
 import travel.travel_community.entity.Image;
 import travel.travel_community.entity.User;
 import travel.travel_community.entity.posts.TravelPost;
+import travel.travel_community.entity.posts.regions.Continent;
+import travel.travel_community.entity.posts.regions.Country;
 import travel.travel_community.repository.TravelPostRepository;
 import travel.travel_community.repository.mapping.LikedTravelPostRepository;
 import travel.travel_community.repository.mapping.ScrapTravelPostRepository;
@@ -128,6 +130,8 @@ public class TravelPostService {
         return travelPostRepository.findRecentTopViewedPosts(sevenDaysAgo, PageRequest.of(0, 30));
     }
 
+
+
     /**
      * 게시글을 최신순으로 조회
      * @param page 페이지 번호 (0부터 시작)
@@ -136,6 +140,19 @@ public class TravelPostService {
     public Page<TravelPost> getLatestPosts(int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         return travelPostRepository.findAllByOrderByCreatedDateDesc(pageable);
+    }
+    public Page<TravelPost> getLatestPosts(int page, String continentName) {
+        if (continentName.equals("전체")) return getLatestPosts(page);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentOrderByCreatedDateDesc(pageable, continent);
+    }
+    public Page<TravelPost> getLatestPosts(int page, String continentName, String countryName) {
+        if (countryName.equals("전체")) return getLatestPosts(page, continentName);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Country country = travelPostCategoryService.findCountryByName(countryName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentAndCountryOrderByCreatedDateDesc(pageable, continent, country);
     }
 
     /**
@@ -147,6 +164,19 @@ public class TravelPostService {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         return travelPostRepository.findAllByOrderByCreatedDateAsc(pageable);
     }
+    public Page<TravelPost> getOldestPosts(int page, String continentName) {
+        if (continentName.equals("전체")) return getLatestPosts(page);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentOrderByCreatedDateAsc(pageable, continent);
+    }
+    public Page<TravelPost> getOldestPosts(int page, String continentName, String countryName) {
+        if (countryName.equals("전체")) return getLatestPosts(page, continentName);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Country country = travelPostCategoryService.findCountryByName(countryName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentAndCountryOrderByCreatedDateAsc(pageable, continent, country);
+    }
 
     /**
      * 게시글을 이름 순으로 조회 (오름차순)
@@ -156,6 +186,19 @@ public class TravelPostService {
     public Page<TravelPost> getPostsByTitleAsc(int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         return travelPostRepository.findAllByOrderByTitleAsc(pageable);
+    }
+    public Page<TravelPost> getPostsByTitleAsc(int page, String continentName) {
+        if (continentName.equals("전체")) return getLatestPosts(page);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentOrderByTitleAsc(pageable, continent);
+    }
+    public Page<TravelPost> getPostsByTitleAsc(int page, String continentName, String countryName) {
+        if (countryName.equals("전체")) return getLatestPosts(page, continentName);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Country country = travelPostCategoryService.findCountryByName(countryName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentAndCountryOrderByTitleAsc(pageable, continent, country);
     }
 
     /**
@@ -167,6 +210,19 @@ public class TravelPostService {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         return travelPostRepository.findAllByOrderByLikeCountDesc(pageable);
     }
+    public Page<TravelPost> getMostLikedPosts(int page, String continentName) {
+        if (continentName.equals("전체")) return getLatestPosts(page);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentOrderByLikeCountDesc(pageable, continent);
+    }
+    public Page<TravelPost> getMostLikedPosts(int page, String continentName, String countryName) {
+        if (countryName.equals("전체")) return getLatestPosts(page, continentName);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Country country = travelPostCategoryService.findCountryByName(countryName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentAndCountryOrderByLikeCountDesc(pageable, continent, country);
+    }
 
     /**
      * 게시글을 조회수순으로 조회
@@ -177,6 +233,19 @@ public class TravelPostService {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         return travelPostRepository.findAllByOrderByViewCountDesc(pageable);
     }
+    public Page<TravelPost> getMostViewedPosts(int page, String continentName) {
+        if (continentName.equals("전체")) return getLatestPosts(page);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentOrderByViewCountDesc(pageable, continent);
+    }
+    public Page<TravelPost> getMostViewedPosts(int page, String continentName, String countryName) {
+        if (countryName.equals("전체")) return getLatestPosts(page, continentName);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Country country = travelPostCategoryService.findCountryByName(countryName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentAndCountryOrderByViewCountDesc(pageable, continent, country);
+    }
 
     /**
      * 게시글을 스크랩수 순으로 조회
@@ -185,7 +254,20 @@ public class TravelPostService {
      */
     public Page<TravelPost> getMostScrapedPosts(int page){
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
-        return travelPostRepository.findAllByOOrderByScrapCountDesc(pageable);
+        return travelPostRepository.findAllByOrderByScrapCountDesc(pageable);
+    }
+    public Page<TravelPost> getMostScrapedPosts(int page, String continentName) {
+        if (continentName.equals("전체")) return getLatestPosts(page);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentOrderByScrapCountDesc(pageable, continent);
+    }
+    public Page<TravelPost> getMostScrapedPosts(int page, String continentName, String countryName) {
+        if (countryName.equals("전체")) return getLatestPosts(page, continentName);
+        Continent continent = travelPostCategoryService.findContinentByName(continentName);
+        Country country = travelPostCategoryService.findCountryByName(countryName);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        return travelPostRepository.findAllByContinentAndCountryOrderByScrapCountDesc(pageable, continent, country);
     }
 
     /**
