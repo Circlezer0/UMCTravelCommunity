@@ -14,6 +14,7 @@ import travel.travel_community.apiPayload.exception.handler.UserHandler;
 
 import java.time.LocalDateTime;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,17 @@ public class MailSendService {
     //private final RedisUtil redisUtil;
     private final HttpSession httpSession;
     private final static Random random = new Random();
+    private final ConcurrentHashMap<String, AuthInfo> authMap = new ConcurrentHashMap<>();
+
+    private static class AuthInfo {
+        String email;
+        LocalDateTime expirationTime;
+
+        AuthInfo(String email, LocalDateTime expirationTime) {
+            this.email = email;
+            this.expirationTime = expirationTime;
+        }
+    }
 
     @Value("${spring.email.authentication.email}")
     private String emailAddress;
@@ -37,7 +49,9 @@ public class MailSendService {
             for (int i = 0; i < 6; i++) {
                 randomNumber = randomNumber * 10 + random.nextInt(10);
             }
-        } while (httpSession.getAttribute(Integer.toString(randomNumber)) != null);
+        } while (authMap.containsKey(Integer.toString(randomNumber)));
+        // 세션으로 하니 백엔드, 프론트 서버 다른 경우 문제 발생해서 일단 메모리로 구현
+        //} while (httpSession.getAttribute(Integer.toString(randomNumber)) != null);
         // 세션 방식을 나중에 Redis 방식으로 변경
         // while (redisUtil.getData(Integer.toString(randomNumber)) != null);
 
@@ -45,22 +59,35 @@ public class MailSendService {
     }
 
     public boolean checkAuthNum(String email, String authNum) {
-        if(httpSession.getAttribute(authNum) == null){
+        AuthInfo authInfo = authMap.get(authNum);
+        if (authInfo == null) {
             throw new UserHandler(ErrorStatus.MAIL_AUTHENTICATION_TOKEN_NOT_FOUND);
         }
-        String cmpEmail = (String) httpSession.getAttribute(authNum);
-        LocalDateTime startTime = (LocalDateTime) httpSession.getAttribute(cmpEmail);
-        if(startTime.isBefore(LocalDateTime.now())){
-            httpSession.removeAttribute(authNum);
-            httpSession.removeAttribute(cmpEmail);
+        if (authInfo.expirationTime.isBefore(LocalDateTime.now())) {
+            authMap.remove(authNum);
             throw new UserHandler(ErrorStatus.MAIL_AUTHENTICATION_TOKEN_EXPIRED);
         }
-        if(!httpSession.getAttribute(authNum).equals(email)){
+        if (!authInfo.email.equals(email)) {
             throw new UserHandler(ErrorStatus.MAIL_AUTHENTICATION_TOKEN_ERROR);
         }
-        httpSession.removeAttribute(authNum);
-        httpSession.removeAttribute(cmpEmail);
+        authMap.remove(authNum);
         return true;
+//        if(httpSession.getAttribute(authNum) == null){
+//            throw new UserHandler(ErrorStatus.MAIL_AUTHENTICATION_TOKEN_NOT_FOUND);
+//        }
+//        String cmpEmail = (String) httpSession.getAttribute(authNum);
+//        LocalDateTime startTime = (LocalDateTime) httpSession.getAttribute(cmpEmail);
+//        if(startTime.isBefore(LocalDateTime.now())){
+//            httpSession.removeAttribute(authNum);
+//            httpSession.removeAttribute(cmpEmail);
+//            throw new UserHandler(ErrorStatus.MAIL_AUTHENTICATION_TOKEN_EXPIRED);
+//        }
+//        if(!httpSession.getAttribute(authNum).equals(email)){
+//            throw new UserHandler(ErrorStatus.MAIL_AUTHENTICATION_TOKEN_ERROR);
+//        }
+//        httpSession.removeAttribute(authNum);
+//        httpSession.removeAttribute(cmpEmail);
+//        return true;
 //        세션 방식을 나중에 Redis 방식으로 변경
 //        if (redisUtil.getData(authNum) == null) {
 //            throw new UserHandler(ErrorStatus.MAIL_AUTHENTICATION_TOKEN_NOT_FOUND);
@@ -83,11 +110,13 @@ public class MailSendService {
 
         mailSend(emailAddress, targetEmail, title, content);
         // 5분동안 인증 토큰 유지
-        httpSession.setAttribute(Integer.toString(authNumber), targetEmail);
-        httpSession.setAttribute(targetEmail, LocalDateTime.now().plusMinutes(5));
+        authMap.put(Integer.toString(authNumber), new AuthInfo(targetEmail, LocalDateTime.now().plusMinutes(5)));
+        return Integer.toString(authNumber);
+//        httpSession.setAttribute(Integer.toString(authNumber), targetEmail);
+//        httpSession.setAttribute(targetEmail, LocalDateTime.now().plusMinutes(5));
 //        세션 방식을 나중에 Redis로 변경
 //        redisUtil.setDataExpire(Integer.toString(authNumber), targetEmail, 60*1L);
-        return Integer.toString(authNumber);
+        //return Integer.toString(authNumber);
     }
 
     //이메일을 전송합니다.

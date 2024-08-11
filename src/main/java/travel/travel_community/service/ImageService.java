@@ -32,7 +32,7 @@ public class ImageService {
      * 이미지를 저장하는 경로는 D드라이브의 travel_web\images 폴더 내부입니다.
      * 서버 컴퓨터의 디렉터리입니다. D드라이브가 없을수도 있으니 각자의 환경에 맞게 수정해야 합니다.
      */
-    private static final String UPLOAD_DIR = "D:\\travel_web\\images";
+    private static final String UPLOAD_DIR = "C:\\travel_web\\images";
 
     private final ImageRepository imageRepository;
     private final ImagePostMappingRepository imageMappingRepository;

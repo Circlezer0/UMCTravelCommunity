@@ -18,7 +18,7 @@ import travel.travel_community.web.dto.userDTO.UserResponseDTO;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final MailSendService mailSendService;
@@ -74,6 +74,7 @@ public class AuthenticationController {
     @PostMapping("/mailSend")
     public ApiResponse<UserResponseDTO.EmailAuthenticationResultDTO> emailAuthentication(@RequestBody @Valid UserRequestDTO.EmailAuthenticationDTO request) {
         String authNum = mailSendService.joinEmail(request.getEmail());
+        System.out.println("authNum = " + authNum);
         return ApiResponse.onSuccess(UserConverter.toEmailAuthenticationResultDTO(authNum));
     }
 
@@ -84,6 +85,8 @@ public class AuthenticationController {
      */
     @PostMapping("/mailCheck")
     public ApiResponse<UserResponseDTO.EmailValidationResultDTO> emailValidation(@RequestBody @Valid UserRequestDTO.EmailValidationDTO request) {
+        System.out.println("request.getAuthNum() = " + request.getAuthNum());
+
         boolean checkResult = mailSendService.checkAuthNum(request.getEmail(), request.getAuthNum());
         if (!checkResult) {
             throw new UserHandler(ErrorStatus.MAIL_AUTHENTICATION_ERROR);
