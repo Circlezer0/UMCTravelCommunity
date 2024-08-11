@@ -1,5 +1,7 @@
 package travel.travel_community.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/travelItemPost")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173")
+@Tag(name = "여행 아이템 게시글", description = "여행 아이템 게시글 관련 API")
 public class TravelItemPostController {
 
     private final UserService userService;
@@ -47,6 +50,7 @@ public class TravelItemPostController {
      * @return 여행가방 게시글 리스트 (30개)
      */
     @GetMapping("/topTravelItemPosts")
+    @Operation(summary = "메인 페이지 게시글 조회", description = "페이지네이션과 정렬 옵션을 사용하여 메인페이지에서 보여줄 여행 아이템 게시글을 조회합니다.")
     public ApiResponse<PostResponseDTO.TravelItemPostsResultDTO> getTopTravelItemPosts() {
         List<TravelItemPost> posts = travelItemPostService.getTopTravelItemPosts();
         return ApiResponse.onSuccess(PostConverter.toTravelItemPostsResultDTO(posts));
@@ -56,6 +60,7 @@ public class TravelItemPostController {
 
     //------------------------- 게시글 조회 ---------------------------------
     @GetMapping("/allPosts")
+    @Operation(summary = "모든 게시글 조회", description = "페이지네이션과 정렬 옵션, 카테고리 옵션을 사용하여 모든 여행 아이템 게시글을 조회합니다.")
     public ApiResponse<TravelItemPostResponseDTO.ViewAllResultDTO> getAllPosts(@ModelAttribute @Valid TravelItemPostRequestDTO.ViewAllDTO request) {
         String orderBy = request.getOrderBy();
         int page = request.getPage() - 1;
@@ -108,6 +113,7 @@ public class TravelItemPostController {
 
 
     @PostMapping("/create")
+    @Operation(summary = "게시글 작성", description = "게시글을 작성합니다.")
     public ApiResponse<PostResponseDTO.TravelItemPostDTO> createPost(@RequestBody @Valid TravelItemPostRequestDTO.CreatePostDTO request) {
         User author = userService.findUserByUserId(request.getUserid());
         List<TravelItemCategory> categories = travelItemPostCategoryService.findCategoriesByName(request.getCategories());
@@ -123,18 +129,21 @@ public class TravelItemPostController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "게시글 조회", description = "PathParameter의 아이디에 해당하는 게시글을 조회합니다.")
     public ApiResponse<PostResponseDTO.TravelItemPostDTO> getPost(@PathVariable Long id) {
         TravelItemPost post = travelItemPostService.findTravelItemPostById(id);
         return ApiResponse.onSuccess(PostConverter.toTravelItemPostResultDTO(post));
     }
 
     @GetMapping("/{id}/viewCount/increase")
+    @Operation(summary = "게시글 조회수 증가", description = "아이디에 해당하는 게시글의 조회수를 증가시킵니다.")
     public ApiResponse<PostResponseDTO.TravelItemPostDTO> incrementViewCount(@PathVariable Long id){
         TravelItemPost post = travelItemPostService.findTravelItemPostById(id);
         post = travelItemPostService.increaseViewCount(post);
         return ApiResponse.onSuccess(PostConverter.toTravelItemPostResultDTO(post));    }
 
     @GetMapping("/{id}/like/toggle")
+    @Operation(summary = "게시글 좋아요 토글", description = "유저 아이디와 게시글 아이디에 해당하는 게시글의 좋아요를 토글시킵니다.")
     public ApiResponse<PostResponseDTO.TravelItemPostDTO> toggleLike(
             @PathVariable Long id, @ModelAttribute @Valid UserRequestDTO.UserIdDTO request){
         String userid = request.getUserid();
@@ -144,6 +153,7 @@ public class TravelItemPostController {
         return ApiResponse.onSuccess(PostConverter.toTravelItemPostResultDTO(post));    }
 
     @GetMapping("/{id}/scrap/toggle")
+    @Operation(summary = "게시글 스크랩 토글", description = "유저 아이디와 게시글 아이디에 해당하는 게시글의 스크랩을 토글시킵니다.")
     public ApiResponse<PostResponseDTO.TravelItemPostDTO> toggleScrap(
             @PathVariable Long id, @ModelAttribute @Valid UserRequestDTO.UserIdDTO request){
         String userid = request.getUserid();

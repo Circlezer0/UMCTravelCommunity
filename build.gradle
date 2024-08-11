@@ -50,6 +50,9 @@ dependencies {
 
 	// Redis (Email Validation)
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// Swagger setting
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 }
 
 tasks.named('test') {
