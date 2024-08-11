@@ -54,6 +54,10 @@ public enum ErrorStatus implements BaseErrorCode {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4001", "Comment not found."),
     PARENT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4002", "Parent comment not found."),
 
+    // 여행가방 카테고리 관련 에러
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001", "Category not found."),
+    CATEGORY_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "CATEGORY4002", "Category already exist."),
+
     // 예시,,,
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),
 

@@ -59,7 +59,7 @@ public class TravelPostController {
 
     //------------------------- 게시글 조회 ---------------------------------
     @GetMapping("/allPosts")
-    public ApiResponse<TravelPostResponseDTO.ViewAllResultDTO> getAllPosts(@ModelAttribute @Valid PostRequestDTO.ViewAllDTO request) {
+    public ApiResponse<TravelPostResponseDTO.ViewAllResultDTO> getAllPosts(@ModelAttribute @Valid TravelPostRequestDTO.ViewAllDTO request) {
         String orderBy = request.getOrderBy();
         int page = request.getPage() - 1;
         String continent = request.getContinent();

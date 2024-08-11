@@ -5,12 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import travel.travel_community.entity.Image;
 import travel.travel_community.entity.User;
 import travel.travel_community.entity.baseEntity.AbstractPost;
-import travel.travel_community.entity.mapping.LikedTravelItemPost;
-import travel.travel_community.entity.mapping.ScrapTravelItemPost;
-import travel.travel_community.entity.mapping.ScrapTravelPost;
-import travel.travel_community.entity.mapping.TravelItemPostCategory;
+import travel.travel_community.entity.mapping.*;
 import travel.travel_community.entity.posts.categories.TravelItemCategory;
 
 import java.util.ArrayList;
@@ -80,5 +78,20 @@ public class TravelItemPost extends AbstractPost {
         return this.postCategories.stream()
                 .map(TravelItemPostCategory::getCategory)
                 .collect(Collectors.toList());
+    }
+
+    // 이미지 매핑
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImageOfTravelItemPost> imageUrls = new ArrayList<>();
+    public void addImageMapping(Image image) {
+        ImageOfTravelItemPost mapping = ImageOfTravelItemPost.builder()
+                .post(this)
+                .image(image)
+                .build();
+        imageUrls.add(mapping);
+    }
+
+    public void removeImageMapping(Image image) {
+        imageUrls.removeIf(mapping -> mapping.getImage().equals(image));
     }
 }

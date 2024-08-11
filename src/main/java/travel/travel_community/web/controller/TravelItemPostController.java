@@ -1,17 +1,34 @@
 package travel.travel_community.web.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 import travel.travel_community.apiPayload.ApiResponse;
+import travel.travel_community.apiPayload.code.status.ErrorStatus;
+import travel.travel_community.apiPayload.exception.handler.PostHandler;
 import travel.travel_community.converter.postConverter.PostConverter;
+import travel.travel_community.converter.postConverter.TravelItemPostConverter;
+import travel.travel_community.converter.postConverter.TravelPostConverter;
+import travel.travel_community.entity.User;
 import travel.travel_community.entity.posts.TravelItemPost;
+import travel.travel_community.entity.posts.TravelPost;
+import travel.travel_community.entity.posts.categories.TravelItemCategory;
+import travel.travel_community.entity.posts.regions.Continent;
+import travel.travel_community.entity.posts.regions.Country;
 import travel.travel_community.service.*;
+import travel.travel_community.web.dto.postDTO.PostRequestDTO;
 import travel.travel_community.web.dto.postDTO.PostResponseDTO;
+import travel.travel_community.web.dto.postDTO.travelItemPostDTO.TravelItemPostRequestDTO;
+import travel.travel_community.web.dto.postDTO.travelItemPostDTO.TravelItemPostResponseDTO;
+import travel.travel_community.web.dto.postDTO.travelPostDTO.TravelPostRequestDTO;
+import travel.travel_community.web.dto.postDTO.travelPostDTO.TravelPostResponseDTO;
+import travel.travel_community.web.dto.userDTO.UserRequestDTO;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/travelItemPost")
@@ -19,7 +36,9 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class TravelItemPostController {
 
+    private final UserService userService;
     private final TravelItemPostService travelItemPostService;
+    private final TravelItemPostCategoryService travelItemPostCategoryService;
 
 
     //--------------------------- 메인페이지 기능 ---------------------------
@@ -34,4 +53,102 @@ public class TravelItemPostController {
     }
     //---------------------------------------------------------------------
 
+
+    //------------------------- 게시글 조회 ---------------------------------
+    @GetMapping("/allPosts")
+    public ApiResponse<TravelItemPostResponseDTO.ViewAllResultDTO> getAllPosts(@ModelAttribute @Valid TravelItemPostRequestDTO.ViewAllDTO request) {
+        String orderBy = request.getOrderBy();
+        int page = request.getPage() - 1;
+        List<String> categories = Arrays.stream(request.getCategories().split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+
+        if(page < 0){
+            throw new PostHandler(ErrorStatus.PAGE_OUT_OF_BOUNDS);
+        }
+
+        // 정렬 키워드 분석
+        Page<TravelItemPost> posts = switch (orderBy) {
+            case "latest" -> travelItemPostService.getLatestPosts(page, categories);
+            case "oldest" -> travelItemPostService.getOldestPosts(page, categories);
+            case "views" -> travelItemPostService.getMostViewedPosts(page, categories);
+            case "likes" -> travelItemPostService.getMostLikedPosts(page, categories);
+            case "scrap" -> travelItemPostService.getMostScrapedPosts(page, categories);
+            case "name" -> travelItemPostService.getPostsByTitleAsc(page, categories);
+            // 에러 발생 코드
+            default -> throw new PostHandler(ErrorStatus.ORDER_BY_VALUE_ERROR);
+        };
+
+        if (posts == null) {
+            throw new PostHandler(ErrorStatus.POST_NOT_FOUND);
+        }
+        if(posts.stream().findAny().isEmpty()){
+            return ApiResponse.onSuccess(
+                    TravelItemPostConverter.toViewAllResultDTO(
+                            posts, page + 1, orderBy, 1, 1
+                    )
+            );
+        }
+        if (posts.getTotalPages() <= page) {
+            throw new PostHandler(ErrorStatus.PAGE_OUT_OF_BOUNDS);
+        }
+
+        int minPageIdx = Math.max(0, (page / 5) * 5) + 1;
+        int maxPageIdx = Math.min(posts.getTotalPages(), (1 + page / 5) * 5);
+
+        return ApiResponse.onSuccess(
+                TravelItemPostConverter.toViewAllResultDTO(
+                        posts, page + 1, orderBy, minPageIdx, maxPageIdx
+                )
+        );
+    }
+    //---------------------------------------------------------------------
+
+
+    @PostMapping("/create")
+    public ApiResponse<PostResponseDTO.TravelItemPostDTO> createPost(@RequestBody @Valid TravelItemPostRequestDTO.CreatePostDTO request) {
+        User author = userService.findUserByUserId(request.getUserid());
+        List<TravelItemCategory> categories = travelItemPostCategoryService.findCategoriesByName(request.getCategories());
+        TravelItemPost post = new TravelItemPost();
+        post.setAuthor(author);
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+        for(TravelItemCategory category:categories){
+            post.addCategory(category);
+        }
+        post = travelItemPostService.createPost(post);
+        return ApiResponse.onSuccess(PostConverter.toTravelItemPostResultDTO(post));
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<PostResponseDTO.TravelItemPostDTO> getPost(@PathVariable Long id) {
+        TravelItemPost post = travelItemPostService.findTravelItemPostById(id);
+        return ApiResponse.onSuccess(PostConverter.toTravelItemPostResultDTO(post));
+    }
+
+    @GetMapping("/{id}/viewCount/increase")
+    public ApiResponse<PostResponseDTO.TravelItemPostDTO> incrementViewCount(@PathVariable Long id){
+        TravelItemPost post = travelItemPostService.findTravelItemPostById(id);
+        post = travelItemPostService.increaseViewCount(post);
+        return ApiResponse.onSuccess(PostConverter.toTravelItemPostResultDTO(post));    }
+
+    @GetMapping("/{id}/like/toggle")
+    public ApiResponse<PostResponseDTO.TravelItemPostDTO> toggleLike(
+            @PathVariable Long id, @ModelAttribute @Valid UserRequestDTO.UserIdDTO request){
+        String userid = request.getUserid();
+        User user = userService.findUserByUserId(userid);
+        TravelItemPost post = travelItemPostService.findTravelItemPostById(id);
+        post = travelItemPostService.toggleLike(post, user);
+        return ApiResponse.onSuccess(PostConverter.toTravelItemPostResultDTO(post));    }
+
+    @GetMapping("/{id}/scrap/toggle")
+    public ApiResponse<PostResponseDTO.TravelItemPostDTO> toggleScrap(
+            @PathVariable Long id, @ModelAttribute @Valid UserRequestDTO.UserIdDTO request){
+        String userid = request.getUserid();
+        User user = userService.findUserByUserId(userid);
+        TravelItemPost post = travelItemPostService.findTravelItemPostById(id);
+        post = travelItemPostService.toggleScrap(post, user);
+        return ApiResponse.onSuccess(PostConverter.toTravelItemPostResultDTO(post));    }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import travel.travel_community.apiPayload.code.status.ErrorStatus;
 import travel.travel_community.apiPayload.exception.handler.ImageHandler;
 import travel.travel_community.entity.Image;
+import travel.travel_community.repository.mapping.ImageItemPostMappingRepository;
 import travel.travel_community.repository.mapping.ImagePostMappingRepository;
 import travel.travel_community.repository.ImageRepository;
 
@@ -36,6 +37,7 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
     private final ImagePostMappingRepository imageMappingRepository;
+    private final ImageItemPostMappingRepository imageItemPostMappingRepository;
 
     public Image findByUrl(String url) {
         return imageRepository.findImageByUrl(url).orElseThrow(() -> new ImageHandler(ErrorStatus.IMAGE_NOT_FOUND));
@@ -102,6 +104,16 @@ public class ImageService {
     public void cleanupOrphanImages() {
         List<Long> orphanImageIds = findOrphanImageIds();
         for (Long imageId : orphanImageIds) {
+            deleteImage(imageId);
+        }
+        cleanupOrphanTravelItemPostImages();
+    }
+    private void cleanupOrphanTravelItemPostImages(){
+        List<Long> allImageIds = imageRepository.findAllIds();
+        List<Long> usedImageIds = imageItemPostMappingRepository.findAllImageIds();
+        allImageIds.removeAll(usedImageIds);
+
+        for (Long imageId : allImageIds) {
             deleteImage(imageId);
         }
     }

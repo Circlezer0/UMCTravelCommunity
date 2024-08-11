@@ -12,6 +12,7 @@ import travel.travel_community.entity.mapping.ImageOfTravelPost;
 import travel.travel_community.entity.posts.TravelPost;
 import travel.travel_community.entity.posts.regions.Continent;
 import travel.travel_community.entity.posts.regions.Country;
+import travel.travel_community.service.TravelItemPostCategoryService;
 import travel.travel_community.service.TravelPostCategoryService;
 import travel.travel_community.service.TravelPostService;
 import travel.travel_community.service.UserService;
@@ -26,6 +27,7 @@ public class TestController {
     private final TravelPostService travelPostService;
     private final UserService userService;
     private final TravelPostCategoryService travelPostCategoryService;
+    private final TravelItemPostCategoryService travelItemPostCategoryService;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -62,19 +64,26 @@ public class TestController {
     }
 
     @GetMapping("/addContinent")
-    public String addContinent(@RequestParam(value = "continent") String continent){
+    public String addContinent(@RequestParam(value = "continent") String continent) {
         travelPostCategoryService.addContinent(continent);
         return "redirect:/";
     }
+
     @GetMapping("/addCountry")
     public String addCountry(@RequestParam(value = "continent") String continent,
-                             @RequestParam(value = "country") String country){
+                             @RequestParam(value = "country") String country) {
         Continent continentByName = travelPostCategoryService.findContinentByName(continent);
-        travelPostCategoryService.addCountry(continentByName,country);
+        travelPostCategoryService.addCountry(continentByName, country);
         return "redirect:/";
     }
+
     @PostConstruct
-    public void regionInit(){
+    public void regionInit() {
         travelPostCategoryService.initializeRegions();
+    }
+
+    @PostConstruct
+    public void categoryInit() {
+        travelItemPostCategoryService.initializeCategories();
     }
 }
