@@ -19,10 +19,14 @@ public class PostConverter {
         if(!imageUrls.isEmpty()){
             imageUrl = imageUrls.get(0).getImage().getUrl();
         }
+        String continent = post.getContinent().getName();
+        String country = post.getCountry().getName();
         return PostResponseDTO.TravelPostDTO.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .continent(continent)
+                .country(country)
                 .likeCount(post.getLikeCount())
                 .scrapCount(post.getScrapCount())
                 .viewCount(post.getViewCount())

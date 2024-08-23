@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/travelItemPost")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
 @Tag(name = "여행 아이템 게시글", description = "여행 아이템 게시글 관련 API")
 public class TravelItemPostController {
 

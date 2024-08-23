@@ -31,7 +31,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.
                 authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/**").permitAll()
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
@@ -48,10 +47,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // React Vite의 기본 포트
+        //configuration.setAllowedOrigins(List.of("http://localhost:5173", "*")); // React Vite의 기본 포트
+        configuration.setAllowedOriginPatterns(List.of("*")); // 모든 origin 허용
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

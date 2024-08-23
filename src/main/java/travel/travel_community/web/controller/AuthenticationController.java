@@ -18,7 +18,7 @@ import travel.travel_community.web.dto.userDTO.UserResponseDTO;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:5173")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final MailSendService mailSendService;

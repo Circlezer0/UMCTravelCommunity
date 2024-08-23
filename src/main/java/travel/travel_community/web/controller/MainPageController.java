@@ -12,9 +12,10 @@ import travel.travel_community.service.system.ServerLogService;
 import travel.travel_community.web.dto.serverLogDTO.ServerLogResponseDTO;
 
 @RestController
-@RequestMapping("/api/v1/main")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/api/v1/main")
+//@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "*")
 public class MainPageController {
     private final UserService userService;
     private final TravelPostService travelPostService;

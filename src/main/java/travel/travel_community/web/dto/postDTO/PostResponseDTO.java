@@ -20,6 +20,8 @@ public class PostResponseDTO {
         Long id;
         String title;
         String content;
+        String continent;
+        String country;
         int likeCount;
         int scrapCount;
         int viewCount;
